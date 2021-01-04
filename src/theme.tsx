@@ -1,3 +1,9 @@
+export const mediaBreaks = {
+  phone: 414,
+  tablet: 768,
+  desktop: 1200
+}
+
 export const colors = {
   blackGrey: '#212121',
   darkGreen: '#0a2828',

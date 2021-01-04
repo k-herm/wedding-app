@@ -1,19 +1,12 @@
 import styled from 'styled-components'
 import { colors } from '../../theme'
 
-export const Main = styled.main`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* height: 100vh; */
-`
-
 export const Container = styled.div`
   background: url('habrich-bg.jpg') center no-repeat;
   background-size: cover;
   position: relative;
-  width: 100%;
-  max-width: 1200px;
+  /* width: 100%; */
+  /* max-width: 1200px; */
   height: 100vh;
   /* min-height: 850px; */
 
@@ -35,7 +28,7 @@ export const Container = styled.div`
   }
 
   img {
-    width: 100%;
+    width: 120%;
     max-width: 750px;
     height: auto;
   }
