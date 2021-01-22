@@ -22,6 +22,7 @@ export const Container = styled.div`
     font-weight: bold;
     color: white;
     padding: 1.2rem;
+    z-index: 2;
   }
 
   #kcImage {
@@ -47,6 +48,7 @@ type ClimbPathProps = {
 export const ClimbPathContainer = styled.div<ClimbPathProps>`
   width: 100%;
   height: 100%;
+  position: absolute;
 
   #climbPathSVG {
     .inner {
@@ -62,10 +64,11 @@ export const ClimbPathContainer = styled.div<ClimbPathProps>`
       stroke-dasharray: ${props => props.pathLength};
     }
 
-    #heart {
-      stroke: ${colors.darkGreen};
-      stroke-width: 3;
-      fill: ${colors.terracotta};
+    #pathMaskReveal {
+      display: none;
+    }
+    #ring {
+      display: none;
     }
   }
 `
