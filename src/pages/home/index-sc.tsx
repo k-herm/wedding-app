@@ -14,10 +14,12 @@ export const Container = styled.div`
   clip-path: url(#binoculars);
 
   h1 {
+    display: none;
     position: absolute;
     top: 0;
     font-family: 'Codystar', cursive;
     font-size: 4rem;
+    /* font-size: 3rem; */
     background: ${colors.blackGrey};
     font-weight: bold;
     color: white;
@@ -29,6 +31,12 @@ export const Container = styled.div`
     width: 120%;
     max-width: 750px;
     height: auto;
+  }
+
+  #emoji {
+    display: none;
+    position: absolute;
+    font-size: 20rem;
   }
 
   svg {

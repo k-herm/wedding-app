@@ -3,14 +3,51 @@ import { TextPlugin } from 'gsap/TextPlugin'
 
 gsap.registerPlugin(TextPlugin)
 
-const travelToRing = (pathLength: number) => {
+const travelPath = (pathLength: number) => {
   const t1 = new TimelineLite()
+  t1.to('h1', {
+    display: 'block',
+    duration: 1,
+    text: 'On a sunny August day',
+    ease: 'none'
+  })
+
+  t1.to(
+    'h1',
+    {
+      display: 'block',
+      duration: 3,
+      text: 'We climbed Mt. Habrich in Squamish, BC',
+      ease: 'none'
+    },
+    '+=1'
+  )
+
   t1.fromTo(
     '#motionPath',
     { strokeDashoffset: pathLength },
-    { strokeDashoffset: 0, duration: 2 }
+    { strokeDashoffset: 0, duration: 2 },
+    '-=2'
   )
   t1.to('#pathMaskReveal', { display: 'block' }, '<0.1')
+
+  t1.to('h1', { display: 'none', text: '' }, '+=0.5')
+
+  return t1
+}
+
+const surprise = () => {
+  const t1 = new TimelineLite()
+  t1.fromTo(
+    '#emoji',
+    { display: 'block', fontSize: 0, translateY: -250 },
+    {
+      fontSize: 350,
+      duration: 2,
+      transformOrigin: 'center center',
+      ease: 'back'
+    }
+  )
 
   t1.fromTo(
     '#ring',
@@ -20,37 +57,37 @@ const travelToRing = (pathLength: number) => {
       duration: 1,
       transformOrigin: 'center center',
       ease: 'back'
-    }
+    },
+    '<0.3'
   )
   t1.to('#ring', { display: 'block' }, '<0.1')
+
+  t1.to('#emoji', { fontSize: 0, duration: 0.75 }, '-=0.1')
 
   t1.to('#ring', { scale: 0, duration: 0.75 }, '-=0.2')
 
   return t1
 }
 
-// https://codepen.io/PointC/pen/c07761a17f94434f1229e11e798f1a3d
 export default (pathLength: number): void => {
   const t1 = new TimelineLite({ delay: 1 })
 
   t1.to('#binoculars circle', { r: 850, duration: 2 })
-  t1.add(travelToRing(pathLength))
+  t1.add(travelPath(pathLength))
+  t1.add(surprise(), '+=0.5')
+  t1.to('#pathMaskReveal', { display: 'none' })
 
   t1.fromTo(
-    'img',
+    '#kcImage',
     { rotationX: 180, transformOrigin: '0% 100%' },
     { rotationX: 0, duration: 2, ease: 'bounce' }
   )
-  t1.fromTo(
-    'h1',
-    { display: 'none' },
-    {
-      display: 'block',
-      duration: 2,
-      text: "We're getting married!",
-      ease: 'none'
-    }
-  )
+  t1.to('h1', {
+    display: 'block',
+    duration: 2,
+    text: "Yup we're getting married!",
+    ease: 'none'
+  })
   t1.to('h1', {
     duration: 1,
     text: 'Get ready for 2022!',

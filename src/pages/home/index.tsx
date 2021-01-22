@@ -68,6 +68,7 @@ const Home = (): JSX.Element => {
         <ClimbPath id="climbPathSVG" />
       </ClimbPathContainer>
 
+      <div id="emoji">😱</div>
       <img id="kcImage" src="kandc-bw.png" alt="kiesha and colin" />
     </Container>
   )
