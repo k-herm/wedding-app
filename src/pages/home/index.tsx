@@ -32,7 +32,7 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     if (containerRef.current) {
-      animateTimeline(climbPathLength)
+      animateTimeline(climbPathLength, viewBox.vw)
     }
   }, [containerRef.current])
 

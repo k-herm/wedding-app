@@ -1,5 +1,6 @@
 import gsap, { TimelineLite } from 'gsap'
 import { TextPlugin } from 'gsap/TextPlugin'
+import { mediaBreaks } from '../../theme'
 
 gsap.registerPlugin(TextPlugin)
 
@@ -36,13 +37,13 @@ const travelPath = (pathLength: number) => {
   return t1
 }
 
-const surprise = () => {
+const surprise = (vw: number) => {
   const t1 = new TimelineLite()
   t1.fromTo(
     '#emoji',
     { display: 'block', fontSize: 0, translateY: -250 },
     {
-      fontSize: 350,
+      fontSize: vw <= mediaBreaks.phone ? 200 : 350,
       duration: 2,
       transformOrigin: 'center center',
       ease: 'back'
@@ -51,9 +52,13 @@ const surprise = () => {
 
   t1.fromTo(
     '#ring',
-    { scale: 0, translateX: 50, translateY: 20 },
     {
-      scale: 0.7,
+      scale: 0,
+      translateX: vw <= mediaBreaks.phone ? 40 : 50,
+      translateY: 20
+    },
+    {
+      scale: vw <= mediaBreaks.phone ? 0.8 : 0.7,
       duration: 1,
       transformOrigin: 'center center',
       ease: 'back'
@@ -63,24 +68,24 @@ const surprise = () => {
   t1.to('#ring', { display: 'block' }, '<0.1')
 
   t1.to('#emoji', { fontSize: 0, duration: 0.75 }, '-=0.1')
-
   t1.to('#ring', { scale: 0, duration: 0.75 }, '-=0.2')
 
   return t1
 }
 
-export default (pathLength: number): void => {
+export default (pathLength: number, vw: number): void => {
   const t1 = new TimelineLite({ delay: 1 })
 
   t1.to('#binoculars circle', { r: 850, duration: 2 })
   t1.add(travelPath(pathLength))
-  t1.add(surprise(), '+=0.5')
-  t1.to('#pathMaskReveal', { display: 'none' })
+  t1.add(surprise(vw), '+=0.5')
+  t1.to('#pathMaskReveal', { opacity: 0, duration: 0.5 })
 
   t1.fromTo(
     '#kcImage',
     { rotationX: 180, transformOrigin: '0% 100%' },
-    { rotationX: 0, duration: 2, ease: 'bounce' }
+    { rotationX: 0, duration: 2, ease: 'bounce' },
+    '<'
   )
   t1.to('h1', {
     display: 'block',

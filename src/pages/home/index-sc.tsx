@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors } from '../../theme'
+import { mediaBreaks, colors } from '../../theme'
 
 export const Container = styled.div`
   background: url('habrich-bg.jpg') center no-repeat;
@@ -19,7 +19,6 @@ export const Container = styled.div`
     top: 0;
     font-family: 'Codystar', cursive;
     font-size: 4rem;
-    /* font-size: 3rem; */
     background: ${colors.blackGrey};
     font-weight: bold;
     color: white;
@@ -46,6 +45,11 @@ export const Container = styled.div`
 
   #binoSVG {
     position: absolute;
+  }
+  @media (max-width: ${mediaBreaks.phone}px) {
+    h1 {
+      font-size: 2.5rem;
+    }
   }
 `
 
