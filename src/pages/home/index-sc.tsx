@@ -18,7 +18,7 @@ export const Container = styled.div`
     position: absolute;
     top: 0;
     font-family: 'Codystar', cursive;
-    font-size: 4rem;
+    font-size: 3.5rem;
     background: ${colors.blackGrey};
     font-weight: bold;
     color: white;

@@ -43,7 +43,7 @@ const surprise = (vw: number) => {
     '#emoji',
     { display: 'block', fontSize: 0, translateY: -250 },
     {
-      fontSize: vw <= mediaBreaks.phone ? 200 : 350,
+      fontSize: vw <= mediaBreaks.phone ? 200 : 300,
       duration: 2,
       transformOrigin: 'center center',
       ease: 'back'
