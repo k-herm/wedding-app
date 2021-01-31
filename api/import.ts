@@ -7,11 +7,6 @@ type Guest = {
   family: string
 }
 
-let fakeIncomingData = [
-  { first_name: 'Kiesha', last_name: 'Herman', family: 'michaelherman' },
-  { first_name: 'Colin', last_name: 'Parry', family: 'normparry' }
-]
-
 const query = `
   query getAllGuests {
     Guests {
@@ -34,16 +29,19 @@ const mutation = (guests: Array<Guest>) => `
   }
 `
 
+// TODO ADD AUTHENTICATION
 export default async function (
   req: NowRequest,
   res: NowResponse
 ): Promise<void> {
   try {
-    const { Guests } = await fetchQuery({ query })
+    if (!req.body.data) return
+    const incomingData = req.body.data
 
-    // replace with request incoming data
-    fakeIncomingData = fakeIncomingData.filter(newGuest =>
-      Guests.find(
+    const { Guests: currentGuests } = await fetchQuery({ query })
+
+    const newGuests = incomingData.filter(newGuest =>
+      currentGuests.find(
         currentGuest =>
           currentGuest.first_name === newGuest.first_name &&
           currentGuest.last_name === newGuest.last_name &&
@@ -54,11 +52,12 @@ export default async function (
     )
 
     const { insert_Guests } = await fetchQuery({
-      query: mutation(fakeIncomingData)
+      query: mutation(newGuests)
     })
 
     res.send(insert_Guests.returning)
   } catch (error) {
+    res.status(400).send({ error: 'Something went wrong during import' })
     console.error(error)
   }
 }
