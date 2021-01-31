@@ -55,9 +55,9 @@ export default async function (
       query: mutation(newGuests)
     })
 
-    res.send(insert_Guests.returning)
+    res.send({ data: insert_Guests.returning })
   } catch (error) {
-    res.status(400).send({ error: 'Something went wrong during import' })
+    res.send({ error: 'Something went wrong during import' })
     console.error(error)
   }
 }

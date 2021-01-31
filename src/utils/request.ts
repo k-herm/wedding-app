@@ -1,15 +1,12 @@
 import fetch from 'isomorphic-fetch'
 
-interface Response<T> {
+export interface Response<T> {
   errorMessage?: string
   responseCode?: string
   data?: T
 }
 
-export default async (
-  url: string,
-  data: unknown
-): Promise<Response<unknown>> => {
+export default async (url: string, data: unknown): Promise<Response<[]>> => {
   try {
     const response = await fetch(url, {
       method: 'POST',
