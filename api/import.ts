@@ -1,11 +1,8 @@
 import { NowRequest, NowResponse } from '@vercel/node'
+import S from 'fluent-json-schema'
+import Ajv, { JSONSchemaType, DefinedError } from 'ajv'
 import fetchQuery from './utils/hasura'
-
-type Guest = {
-  first_name: string
-  last_name: string
-  family: string
-}
+import { ValidationError } from './utils/validation-error'
 
 const query = `
   query getAllGuests {
@@ -16,7 +13,7 @@ const query = `
     }
   }
 `
-const mutation = (guests: Array<Guest>) => `
+const mutation = (guests: Guest[]) => `
   mutation insertGuests {
     insert_Guests(objects: [ ${guests.map(
       guest => `{
@@ -38,9 +35,14 @@ export default async function (
   res: NowResponse
 ): Promise<void> {
   try {
-    if (!req.body.data) return
+    const ajv = new Ajv({ allErrors: true })
+    const validateBody = ajv.compile(bodySchema)
 
-    const incomingData = req.body.data
+    if (!validateBody(req.body)) {
+      throw new ValidationError(validateBody.errors)
+    }
+
+    const incomingData = (req.body as { data: [] }).data
     const { Guests: currentGuests } = await fetchQuery({ query })
 
     const newGuests = incomingData.filter((newGuest: Guest) =>
@@ -60,7 +62,33 @@ export default async function (
 
     res.send({ data: insert_Guests.returning })
   } catch (error) {
-    res.status(500).send({ error: 'Something went wrong during import' })
+    let errorMessage = 'Something went wrong during import'
+    if (error.name === 'ValidationError') {
+      errorMessage = error.errors
+    }
+
+    res.status(500).send({ error: errorMessage })
     console.error(error)
   }
 }
+
+// TYPES / SCHEMAS
+type Guest = {
+  first_name: string
+  last_name: string
+  family: string
+}
+
+const bodySchema = S.object()
+  .prop(
+    'data',
+    S.array()
+      .items(
+        S.object()
+          .prop('first_name', S.string().required())
+          .prop('last_name', S.string().required())
+          .prop('family', S.string().required())
+      )
+      .required()
+  )
+  .valueOf()

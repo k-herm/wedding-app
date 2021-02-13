@@ -23,9 +23,9 @@ const Admin = (): JSX.Element => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    submitEl.current && submitEl.current.setAttribute('disabled', 'true')
 
     if (inputEl.current && inputEl.current.files?.length) {
+      submitEl.current && submitEl.current.setAttribute('disabled', 'true')
       const csv = inputEl.current.files[0]
       Papa.parse(csv, {
         worker: true,
@@ -39,7 +39,6 @@ const Admin = (): JSX.Element => {
     } else {
       setIsSuccess(false)
       setResMessage('Whoops! Select a csv file to import.')
-      submitEl.current && submitEl.current.removeAttribute('disabled')
     }
   }
 
