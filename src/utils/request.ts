@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 
 export interface Response<T> {
-  errorMessage?: string
+  error?: string
   responseCode?: string
   data?: T
 }
@@ -18,6 +18,6 @@ export default async (url: string, data: unknown): Promise<Response<[]>> => {
     return result
   } catch (error) {
     console.error('ERROR: ', error)
-    return { errorMessage: 'Request was unable to send.' }
+    return { error: 'Request was unable to send.' }
   }
 }

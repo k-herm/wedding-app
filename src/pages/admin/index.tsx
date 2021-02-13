@@ -12,9 +12,9 @@ const Admin = (): JSX.Element => {
   const [resMessage, setResMessage] = useState<string>('')
 
   const relayResponse = (res: Response<[]>) => {
-    if (res.errorMessage) {
+    if (res.error) {
       setIsSuccess(false)
-      setResMessage(res.errorMessage)
+      setResMessage(`Error: ${res.error}`)
     } else {
       setIsSuccess(true)
       setResMessage(`Success! ${res.data?.length} entries have been added.`)

@@ -19,8 +19,11 @@ const query = `
 const mutation = (guests: Array<Guest>) => `
   mutation insertGuests {
     insert_Guests(objects: [ ${guests.map(
-      guest =>
-        `{last_name: "${guest.last_name}", first_name: "${guest.first_name}", family: "${guest.family}"}`
+      guest => `{
+        last_name: "${guest.last_name.trim()}", 
+        first_name: "${guest.first_name.trim()}", 
+        family: "${guest.family.trim()}"
+      }`
     )} ]) {
       returning {
         id
@@ -36,16 +39,16 @@ export default async function (
 ): Promise<void> {
   try {
     if (!req.body.data) return
-    const incomingData = req.body.data
 
+    const incomingData = req.body.data
     const { Guests: currentGuests } = await fetchQuery({ query })
 
-    const newGuests = incomingData.filter(newGuest =>
+    const newGuests = incomingData.filter((newGuest: Guest) =>
       currentGuests.find(
         currentGuest =>
-          currentGuest.first_name === newGuest.first_name &&
-          currentGuest.last_name === newGuest.last_name &&
-          currentGuest.family === newGuest.family
+          currentGuest.first_name === newGuest.first_name.trim() &&
+          currentGuest.last_name === newGuest.last_name.trim() &&
+          currentGuest.family === newGuest.family.trim()
       )
         ? false
         : true
@@ -57,7 +60,7 @@ export default async function (
 
     res.send({ data: insert_Guests.returning })
   } catch (error) {
-    res.send({ error: 'Something went wrong during import' })
+    res.status(500).send({ error: 'Something went wrong during import' })
     console.error(error)
   }
 }
