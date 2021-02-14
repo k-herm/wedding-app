@@ -1,6 +1,6 @@
 import { NowRequest, NowResponse } from '@vercel/node'
 import S from 'fluent-json-schema'
-import Ajv, { JSONSchemaType, DefinedError } from 'ajv'
+import Ajv from 'ajv'
 import fetchQuery from './utils/hasura'
 import { ValidationError } from './utils/validation-error'
 
@@ -13,7 +13,7 @@ const query = `
     }
   }
 `
-const mutation = (guests: Guest[]) => `
+export const mutation = (guests: Guest[]): string => `
   mutation insertGuests {
     insert_Guests(objects: [ ${guests.map(
       guest => `{
@@ -60,7 +60,7 @@ export default async function (
       query: mutation(newGuests)
     })
 
-    res.send({ data: insert_Guests.returning })
+    res.status(200).send({ data: insert_Guests.returning })
   } catch (error) {
     let errorMessage = 'Something went wrong during import'
     if (error.name === 'ValidationError') {

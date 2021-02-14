@@ -40,12 +40,14 @@
     "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-react": "^7.22.0",
     "prettier": "^2.2.1",
+    "ts-jest": "^26.5.1",
     "vercel": "^21.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest ./src --watchAll --runInBand --no-cache",
+    "test:api": "jest ./api --watchAll --runInBand --no-cache",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -53,6 +55,16 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "transform": {"^.+\\.(js|jsx|ts|tsx)$": "ts-jest"},
+    "testMatch": [
+      "<rootDir>/src/**/*.test.{js, jsx, ts, tsx}",
+      "<rootDir>/api/**/*.test.{js, jsx, mjs, ts, tsx}"
+    ],
+  
+    "transformIgnorePatterns": ["node_modules/"]
   },
   "browserslist": {
     "production": [
