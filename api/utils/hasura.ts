@@ -10,6 +10,10 @@ type Data = {
   insert_Guests?: {
     returning: [Record<string, unknown>]
   }
+  Users?: [Record<string, string>]
+  insert_Users_one?: {
+    user_id: string
+  }
 }
 
 async function query({ query, variables = {} }: Query): Promise<Data> {
