@@ -31,7 +31,7 @@ export const mutation = (guests: Guest[]): string => `
 `
 
 export default async (req: NowRequest, res: NowResponse): Promise<void> =>
-  withAuth(req, res, async () => {
+  withAuth(req, res, 'admin', async () => {
     try {
       const ajv = new Ajv({ allErrors: true })
       const validateBody = ajv.compile(bodySchema)

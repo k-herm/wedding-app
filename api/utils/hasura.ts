@@ -14,6 +14,9 @@ type Data = {
   insert_Users_one?: {
     user_id: string
   }
+  update_Users?: {
+    returning: [Record<string, unknown>]
+  }
 }
 
 async function query({ query, variables = {} }: Query): Promise<Data> {
