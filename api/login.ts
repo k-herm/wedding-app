@@ -1,13 +1,18 @@
 import { NowRequest, NowResponse } from '@vercel/node'
 import { randomBytes } from 'crypto'
 import fetchQuery from './utils/hasura'
-import { setCookieAndJwt, Token, COOKIE_EXPIRY } from './utils/with-auth'
+import { Token, COOKIE_EXPIRY } from './utils/with-auth'
+import { setCookieAndJwt } from './refresh'
 
 const ADMIN_COOKIE_EXPIRY = 1000 * 60 * 60 * 24
 const ADMIN_URL = '/admin'
 
 export default async (req: NowRequest, res: NowResponse): Promise<void> => {
   try {
+    if (req.headers.cookie) {
+      res.status(200).send({ message: 'You are logged in.' })
+    }
+
     const body = JSON.parse(req.body)
     if (!body.password) {
       res.status(401).send({ error: 'No password entered' })
@@ -25,7 +30,8 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
     }
 
     const user = await generateNewUserToken()
-    const expiry = req.url === ADMIN_URL ? ADMIN_COOKIE_EXPIRY : COOKIE_EXPIRY
+    const expiry =
+      Date.now() + req.url === ADMIN_URL ? ADMIN_COOKIE_EXPIRY : COOKIE_EXPIRY
     const permission = req.url === ADMIN_URL ? 'admin' : 'user'
 
     setCookieAndJwt(res, user, permission, expiry)
