@@ -1,7 +1,12 @@
 import importApi, { mutation } from '../import'
+import withAuth from '../utils/with-auth'
 import fetchQuery from '../utils/hasura'
 
 jest.mock('../utils/hasura.ts')
+jest.mock('../utils/with-auth.ts')
+
+const permission = 'user'
+const req = {}
 
 describe('import', () => {
   let res
@@ -15,6 +20,8 @@ describe('import', () => {
 
     res.status.mockImplementation(() => res)
     res.send.mockImplementation(() => res)
+
+    withAuth.mockImplementation((req, res, permission, callback) => callback())
   })
 
   const req = data => ({ body: { data } })
@@ -114,7 +121,7 @@ describe('import', () => {
       await importApi({ body: test }, res)
       expect(fetchQuery).not.toHaveBeenCalled()
 
-      expect(res.status).toBeCalledWith(500)
+      expect(res.status).toBeCalledWith(400)
       expect(res.send).toBeCalledWith({
         error: expect.any(Array)
       })

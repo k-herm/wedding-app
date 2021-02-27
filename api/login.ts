@@ -4,13 +4,14 @@ import fetchQuery from './utils/hasura'
 import { Token, COOKIE_EXPIRY } from './utils/with-auth'
 import { setCookieAndJwt } from './refresh'
 
-const ADMIN_COOKIE_EXPIRY = 1000 * 60 * 60 * 24
+export const ADMIN_COOKIE_EXPIRY = 1000 * 60 * 60 * 24
 const ADMIN_URL = '/admin'
 
 export default async (req: NowRequest, res: NowResponse): Promise<void> => {
   try {
-    if (req.headers.cookie) {
+    if (req.headers.cookie && req.headers.authorization) {
       res.status(200).send({ message: 'You are logged in.' })
+      return
     }
 
     const body = JSON.parse(req.body)
@@ -31,7 +32,7 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
 
     const user = await generateNewUserToken()
     const expiry =
-      Date.now() + req.url === ADMIN_URL ? ADMIN_COOKIE_EXPIRY : COOKIE_EXPIRY
+      Date.now() + (req.url === ADMIN_URL ? ADMIN_COOKIE_EXPIRY : COOKIE_EXPIRY)
     const permission = req.url === ADMIN_URL ? 'admin' : 'user'
 
     setCookieAndJwt(res, user, permission, expiry)

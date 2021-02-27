@@ -8,7 +8,7 @@ export default async (
   req: NowRequest,
   res: NowResponse,
   allowedPermission: Permission,
-  cb: () => Promise<void>
+  callback: () => Promise<void>
 ): Promise<void> => {
   if (!req.headers.authorization) {
     res.redirect(401, '/')
@@ -23,7 +23,7 @@ export default async (
     return
   }
 
-  cb()
+  callback()
 }
 
 export const getUserQuery = (token: string): string => `

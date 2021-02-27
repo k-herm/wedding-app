@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { randomBytes } from 'crypto'
 
 import fetchQuery from './utils/hasura'
-import { isValidJwt, getUserQuery, Permission, Token } from './utils/with-auth'
+import { getUserQuery, Permission, Token } from './utils/with-auth'
 
 export default async (req: NowRequest, res: NowResponse): Promise<void> => {
   try {
@@ -15,10 +15,10 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
     const { refreshToken, exp } = parseCookie(req.headers.cookie)
     const user = await getUserRefresh(refreshToken)
 
-    let permission: Permission | false = 'user'
+    let permission: Permission | null = 'user'
     if (req.headers.authorization) {
       const jwtToken = req.headers.authorization.replace('Bearer ', '')
-      permission = await isValidJwt(jwtToken)
+      permission = getPermissionFromJwt(jwtToken)
       if (!permission) {
         res.redirect(401, '/')
         return
@@ -30,6 +30,15 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
   } catch (error) {
     res.status(500).send({ error: 'Something went wrong refreshing token' })
     console.error(error)
+  }
+}
+
+function getPermissionFromJwt(token: string): Permission | null {
+  try {
+    const decodedJwt = jwt.verify(token, process.env.JWT_SECRET)
+    return (decodedJwt as Token).permission
+  } catch (error) {
+    return null
   }
 }
 
