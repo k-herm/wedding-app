@@ -1,15 +1,16 @@
 import React, { useRef, useState, FormEvent } from 'react'
 import Papa from 'papaparse'
-import send, { Response } from '../../utils/request'
+import useRequest, { Response } from '../../utils/use-request'
 import { Container } from './index-sc'
 
-// TODO PROTECT ROUTE
 const Admin = (): JSX.Element => {
   const inputEl = useRef<HTMLInputElement>(null)
   const submitEl = useRef<HTMLButtonElement>(null)
 
   const [isSuccess, setIsSuccess] = useState<boolean>(true)
   const [resMessage, setResMessage] = useState<string>('')
+
+  const send = useRequest()
 
   const relayResponse = (res: Response<[]>) => {
     if (res.error) {

@@ -1,3 +1,5 @@
+import { createMuiTheme } from '@material-ui/core/styles'
+
 export const mediaBreaks = {
   phone: 414,
   tablet: 768,
@@ -15,3 +17,14 @@ export const colors = {
   terracotta: '#c74825',
   terracotta2: '#b24c1b'
 }
+
+export const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#00897b'
+    },
+    secondary: {
+      main: '#ff8a80'
+    }
+  }
+})
