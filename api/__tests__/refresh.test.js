@@ -67,7 +67,7 @@ describe('import', () => {
       expect.stringMatching(cookieRegex)
     )
     expect(res.status).toBeCalledWith(200)
-    expect(res.send).toBeCalledWith({ token: fakeJwt })
+    expect(res.send).toBeCalledWith({ data: { token: fakeJwt } })
   })
 
   it('should send a 401 redirect if jwt is invalid', async () => {
@@ -116,7 +116,7 @@ describe('import', () => {
       expect.stringMatching(cookieRegex)
     )
     expect(res.status).toBeCalledWith(200)
-    expect(res.send).toBeCalledWith({ token: fakeJwt })
+    expect(res.send).toBeCalledWith({ data: { token: fakeJwt } })
   })
 
   it('return an error message if there is an error with fetchQuery', async () => {

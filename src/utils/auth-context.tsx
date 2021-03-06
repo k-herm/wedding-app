@@ -1,16 +1,24 @@
 import React, { useContext, createContext, useState } from 'react'
-import useRequest from './use-request'
+import useRequest, { Response } from './use-request'
+import jwt from 'jsonwebtoken'
 
 type User = {
-  id?: string
+  user_id?: string
   permission?: 'user' | 'admin'
   jwtToken?: string
 }
 
+type JWT = {
+  token: string
+}
+
 type AuthContextType = {
   user: User
-  signIn: (password: string, cb: () => void) => void
-  signOut: (cb: () => void) => void
+  signIn: (
+    password: string,
+    cb?: () => void
+  ) => Promise<Response<{ token: string }>>
+  signOut: (cb?: () => void) => void
 }
 
 const useAuthProvider = (): AuthContextType => {
@@ -18,19 +26,31 @@ const useAuthProvider = (): AuthContextType => {
 
   const request = useRequest()
 
-  const signIn = async (password: string, cb: () => void) => {
-    const response = await request('/api/login', { password })
-    console.log(response) //response.token = jwt
-    // decode with headrs to get expiry?? might be in payload {complete: true}
-    setUser({ id: 'id', permission: 'user', jwtToken: '' })
-    cb()
+  const signIn = async (
+    password: string,
+    cb?: () => void
+  ): Promise<Response<JWT>> => {
+    const response = (await request('/api/login', {
+      password
+    })) as Response<JWT>
+    if (response?.data?.token) {
+      const payload = jwt.decode(response.data.token) as User
+      setUser({
+        user_id: payload.user_id,
+        permission: payload.permission,
+        jwtToken: response.data.token
+      })
+      cb && cb()
+    }
+
+    return response
   }
 
   // refresh function
 
-  const signOut = (cb: () => void) => {
-    setUser({})
-    cb()
+  const signOut = (cb?: () => void) => {
+    // setUser({})
+    cb && cb()
   }
 
   return { user, signIn, signOut }
@@ -46,7 +66,6 @@ type AuthProviderProps = {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
-  // put object in state to avoid re-renders
-  const [auth] = useState<AuthContextType>(() => useAuthProvider())
+  const auth = useAuthProvider()
   return <authContext.Provider value={auth}>{children}</authContext.Provider>
 }

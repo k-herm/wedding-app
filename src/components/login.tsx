@@ -17,30 +17,50 @@ const LoginWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  .card {
+  .login_card {
     padding: 1.5rem;
     min-width: 290px;
     min-height: 150px;
   }
-  .input {
+  .login_input {
     margin: 1rem 0;
+  }
+  .login_button_wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
   }
 `
 
 const Login = (): JSX.Element => {
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
+  const [hasError, setHasError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const auth = useAuthContext()
 
+  const handleClick = async (): Promise<void> => {
+    if (auth.signIn && password) {
+      const result = await auth.signIn(password)
+      if (result.error) {
+        setHasError(true)
+        setErrorMessage(result.error)
+      } else {
+        setHasError(false)
+        setErrorMessage('')
+      }
+    }
+  }
+  console.log('user>>', auth.user)
+
   return (
     <LoginWrapper>
-      <Card className="card">
+      <Card className="login_card">
         <Typography gutterBottom variant="h5" component="h2">
           You feeling lucky?
         </Typography>
         <TextField
-          className="input"
+          className="login_input"
           required
           name="password"
           label="Password"
@@ -49,10 +69,14 @@ const Login = (): JSX.Element => {
           value={password}
           onChange={e => setPassword(e.target.value)}
           fullWidth
+          error={hasError}
+          helperText={hasError && errorMessage}
         />
-        <Button variant="outlined" color="primary">
-          Submit
-        </Button>
+        <div className="login_button_wrapper">
+          <Button variant="outlined" color="primary" onClick={handleClick}>
+            Unlock
+          </Button>
+        </div>
       </Card>
     </LoginWrapper>
   )

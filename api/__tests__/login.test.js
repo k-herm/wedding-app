@@ -8,10 +8,7 @@ jest.mock('../utils/hasura.ts')
 
 describe('import', () => {
   const user_id = 'crazy_guy_64'
-  const token = 789
-  const newToken = 'def'
   const fakeJwt = 'i am a fake'
-  const cookieExpiry = 1243
   const cookieRegex = expiry =>
     new RegExp(
       '^refreshToken=\\[\\W?.{16}\\W?,\\s?' +
@@ -22,6 +19,7 @@ describe('import', () => {
     )
 
   let res
+
   beforeEach(() => {
     jest.resetAllMocks()
 
@@ -43,10 +41,9 @@ describe('import', () => {
     jest.useRealTimers()
   })
 
-  const req = (body, url = '') => ({
-    headers: {},
-    body: JSON.stringify(body),
-    url
+  const req = (body, referer = 'protected') => ({
+    headers: { referer: `${process.env.LOCAL_HOST}/${referer}` },
+    body
   })
 
   it('should send a 200 if header contains a cookie and token', async () => {
@@ -66,7 +63,7 @@ describe('import', () => {
 
   it('should send a 401 if admin passwords do not match', async () => {
     process.env.ADMIN_SECRET = 'whos asking'
-    await login(req({ password: 'wrong' }, '/admin'), res)
+    await login(req({ password: 'wrong' }, 'admin'), res)
 
     expect(res.status).toBeCalledWith(401)
     expect(res.send).toBeCalledWith({ error: 'Incorrect Password' })
@@ -87,7 +84,7 @@ describe('import', () => {
     jwt.sign.mockImplementation(() => fakeJwt)
 
     process.env.ADMIN_SECRET = 'fine, youre in'
-    await login(req({ password: 'fine, youre in' }, '/admin'), res)
+    await login(req({ password: 'fine, youre in' }, 'admin'), res)
 
     const expiry = Date.now() + ADMIN_COOKIE_EXPIRY
     expect(res.setHeader).toHaveBeenCalledWith(
@@ -95,7 +92,7 @@ describe('import', () => {
       expect.stringMatching(cookieRegex(expiry))
     )
     expect(res.status).toBeCalledWith(200)
-    expect(res.send).toBeCalledWith({ token: fakeJwt })
+    expect(res.send).toBeCalledWith({ data: { token: fakeJwt } })
   })
 
   it('should send a jwt and cookie if user passwords match', async () => {
@@ -113,7 +110,7 @@ describe('import', () => {
       expect.stringMatching(cookieRegex(expiry))
     )
     expect(res.status).toBeCalledWith(200)
-    expect(res.send).toBeCalledWith({ token: fakeJwt })
+    expect(res.send).toBeCalledWith({ data: { token: fakeJwt } })
   })
 
   it('return an error message if there is an error with fetchQuery', async () => {

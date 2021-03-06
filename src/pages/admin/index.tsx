@@ -31,7 +31,7 @@ const Admin = (): JSX.Element => {
       Papa.parse(csv, {
         worker: true,
         complete: async results => {
-          const response = await send('/api/import', results)
+          const response = (await send('/api/import', results)) as Response<[]>
           relayResponse(response)
           submitEl.current && submitEl.current.removeAttribute('disabled')
         },

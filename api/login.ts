@@ -14,26 +14,32 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
       return
     }
 
-    const body = JSON.parse(req.body)
-    if (!body.password) {
+    const { password } = req.body
+    if (!password) {
       res.status(401).send({ error: 'No password entered' })
       return
     }
 
-    if (req.url === ADMIN_URL && body.password !== process.env.ADMIN_SECRET) {
+    const domain =
+      process.env.NODE_ENV === 'development'
+        ? process.env.LOCAL_DOMAIN
+        : process.env.APP_DOMAIN
+    const reqUrl = req.headers.referer.replace(domain, '')
+
+    if (reqUrl === ADMIN_URL && password !== process.env.ADMIN_SECRET) {
       res.status(401).send({ error: 'Incorrect Password' })
       return
     }
 
-    if (req.url !== ADMIN_URL && body.password !== process.env.GUEST_SECRET) {
+    if (reqUrl !== ADMIN_URL && password !== process.env.GUEST_SECRET) {
       res.status(401).send({ error: 'Incorrect Password' })
       return
     }
 
     const user = await generateNewUserToken()
     const expiry =
-      Date.now() + (req.url === ADMIN_URL ? ADMIN_COOKIE_EXPIRY : COOKIE_EXPIRY)
-    const permission = req.url === ADMIN_URL ? 'admin' : 'user'
+      Date.now() + (reqUrl === ADMIN_URL ? ADMIN_COOKIE_EXPIRY : COOKIE_EXPIRY)
+    const permission = reqUrl === ADMIN_URL ? 'admin' : 'user'
 
     setCookieAndJwt(res, user, permission, expiry)
   } catch (error) {

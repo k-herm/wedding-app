@@ -3,16 +3,19 @@ import { useAuthContext } from './auth-context'
 
 export interface Response<T> {
   error?: string
-  responseCode?: string
+  responseCode?: number
   data?: T
 }
 
-const useRequest = (): ((
-  url: string,
-  data: unknown
-) => Promise<Response<[]>>) => {
+type Request = (url: string, data: unknown) => Promise<Response<unknown>>
+
+const useRequest = (): Request => {
   const { user } = useAuthContext()
-  const request = async (url: string, data: unknown): Promise<Response<[]>> => {
+
+  const request = async (
+    url: string,
+    data: unknown
+  ): Promise<Response<unknown>> => {
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': ''

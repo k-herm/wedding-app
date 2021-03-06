@@ -50,7 +50,7 @@ export function setCookieAndJwt(
 ): void {
   const jwt = generateJwt(data, permission)
   res.setHeader('Set-Cookie', generateCookie(data.token, expiry))
-  res.status(200).send({ token: jwt })
+  res.status(200).send({ data: { token: jwt } })
 }
 
 function generateJwt(payload: Token, permission: Permission): string {
