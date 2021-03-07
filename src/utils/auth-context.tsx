@@ -19,12 +19,22 @@ type AuthContextType = {
     cb?: () => void
   ) => Promise<Response<{ token: string }>>
   signOut: (cb?: () => void) => void
+  refresh: (cb?: () => void) => void
 }
 
 const useAuthProvider = (): AuthContextType => {
   const [user, setUser] = useState<User>({})
 
   const request = useRequest()
+
+  const decodeAndSet = (token: string) => {
+    const payload = jwt.decode(token) as User
+    setUser({
+      user_id: payload.user_id,
+      permission: payload.permission,
+      jwtToken: token
+    })
+  }
 
   const signIn = async (
     password: string,
@@ -34,26 +44,28 @@ const useAuthProvider = (): AuthContextType => {
       password
     })) as Response<JWT>
     if (response?.data?.token) {
-      const payload = jwt.decode(response.data.token) as User
-      setUser({
-        user_id: payload.user_id,
-        permission: payload.permission,
-        jwtToken: response.data.token
-      })
+      decodeAndSet(response.data.token)
       cb && cb()
     }
 
     return response
   }
 
-  // refresh function
+  const refresh = async (cb?: () => void) => {
+    const response = (await request('/api/refresh')) as Response<JWT>
+    if (response?.data?.token) {
+      decodeAndSet(response.data.token)
+      cb && cb()
+    }
+    return response
+  }
 
   const signOut = (cb?: () => void) => {
     // setUser({})
     cb && cb()
   }
 
-  return { user, signIn, signOut }
+  return { user, signIn, signOut, refresh }
 }
 
 const authContext = createContext<Partial<AuthContextType>>({})

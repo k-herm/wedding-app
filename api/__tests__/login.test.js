@@ -9,14 +9,16 @@ jest.mock('../utils/hasura.ts')
 describe('import', () => {
   const user_id = 'crazy_guy_64'
   const fakeJwt = 'i am a fake'
-  const cookieRegex = expiry =>
-    new RegExp(
-      '^refreshToken=\\[\\W?.{16}\\W?,\\s?' +
+  const cookieRegex = expiry => {
+    const match = { ' ': '\\s', '(': '\\(', ')': '\\)' }
+    return new RegExp(
+      'refreshToken=\\[\\W?.{16}\\W?,\\s?' +
         expiry +
-        '\\];\\s?max-age=' +
-        expiry +
+        '\\];\\s?expires=' +
+        new Date(expiry).toString().replace(/[\s()]/g, m => match[m]) +
         ';'
     )
+  }
 
   let res
 
@@ -25,6 +27,8 @@ describe('import', () => {
 
     jest.useFakeTimers('modern')
     jest.setSystemTime(Date.parse('2021'))
+
+    process.env.NODE_ENV = 'development'
 
     res = {
       setHeader: jest.fn(),
@@ -39,6 +43,7 @@ describe('import', () => {
 
   afterEach(() => {
     jest.useRealTimers()
+    jest.resetModules()
   })
 
   const req = (body, referer = 'protected') => ({

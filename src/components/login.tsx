@@ -51,7 +51,6 @@ const Login = (): JSX.Element => {
       }
     }
   }
-  console.log('user>>', auth.user)
 
   return (
     <LoginWrapper>

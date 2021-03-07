@@ -66,16 +66,17 @@ function generateJwt(payload: Token, permission: Permission): string {
 function generateCookie(token: string, expiry?: number): string {
   const prodSettings = `domain=${process.env.APP_DOMAIN}; secure`
   const defaultSettings = `refreshToken=${JSON.stringify([token, expiry])}; ${
-    expiry ? `max-age=${expiry};` : ''
-  } httpOnly`
+    expiry ? `expires=${new Date(expiry)}; ` : ''
+  }path=/; httpOnly;`
 
   return process.env.NODE_ENV === 'development'
     ? defaultSettings
-    : `${defaultSettings}; ${prodSettings}`
+    : `${defaultSettings} ${prodSettings}`
 }
 
 function parseCookie(cookie: string): Record<string, string> {
-  const cookieArr = JSON.parse(cookie.replace('refreshToken=', ''))
+  const token = cookie.match(/refreshToken=\[.*\]/g)
+  const cookieArr = JSON.parse(token[0].replace('refreshToken=', ''))
   return { refreshToken: cookieArr[0], exp: cookieArr[1] }
 }
 

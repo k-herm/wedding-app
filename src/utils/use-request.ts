@@ -7,14 +7,14 @@ export interface Response<T> {
   data?: T
 }
 
-type Request = (url: string, data: unknown) => Promise<Response<unknown>>
+type Request = (url: string, data?: unknown) => Promise<Response<unknown>>
 
 const useRequest = (): Request => {
   const { user } = useAuthContext()
 
   const request = async (
     url: string,
-    data: unknown
+    data?: unknown
   ): Promise<Response<unknown>> => {
     const headers = {
       'Content-Type': 'application/json',

@@ -11,19 +11,22 @@ describe('import', () => {
   const newToken = 'def'
   const fakeJwt = 'i am a fake'
   const cookieExpiry = 1243
+  const match = { ' ': '\\s', '(': '\\(', ')': '\\)' }
   const cookieRegex = new RegExp(
-    '^refreshToken=\\[\\W?' +
+    'refreshToken=\\[\\W?' +
       newToken +
       '\\W?,\\s?' +
       cookieExpiry +
-      '\\];\\s?max-age=' +
-      cookieExpiry +
+      '\\];\\s?expires=' +
+      new Date(cookieExpiry).toString().replace(/[\s()]/g, m => match[m]) +
       ';'
   )
 
   let res
   beforeEach(() => {
     jest.resetAllMocks()
+
+    process.env.NODE_ENV = 'development'
 
     res = {
       setHeader: jest.fn(),
@@ -36,6 +39,10 @@ describe('import', () => {
     res.status.mockImplementation(() => res)
     res.send.mockImplementation(() => res)
     res.redirect.mockImplementation(() => res)
+  })
+
+  afterEach(() => {
+    jest.resetModules()
   })
 
   it('should send a 401 if header does not contain a cookie', async () => {

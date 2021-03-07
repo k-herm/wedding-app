@@ -22,7 +22,7 @@ const App = (): JSX.Element => (
             <Home />
           </Route>
 
-          <PrivateRoute path="/admin">
+          <PrivateRoute path="/admin" permission="admin">
             <Admin />
           </PrivateRoute>
 
