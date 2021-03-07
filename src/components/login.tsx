@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 
-import { useAuthContext } from '../utils/auth-context'
+import { SignInFunction } from '../utils/auth-context'
 
 const LoginWrapper = styled.div`
   z-index: 2;
@@ -32,16 +32,18 @@ const LoginWrapper = styled.div`
   }
 `
 
-const Login = (): JSX.Element => {
+type LoginProps = {
+  signIn?: SignInFunction
+}
+
+const Login = ({ signIn }: LoginProps): JSX.Element => {
   const [password, setPassword] = useState('')
   const [hasError, setHasError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const auth = useAuthContext()
-
   const handleClick = async (): Promise<void> => {
-    if (auth.signIn && password) {
-      const result = await auth.signIn(password)
+    if (signIn && password) {
+      const result = await signIn(password)
       if (result.error) {
         setHasError(true)
         setErrorMessage(result.error)
@@ -56,7 +58,7 @@ const Login = (): JSX.Element => {
     <LoginWrapper>
       <Card className="login_card">
         <Typography gutterBottom variant="h5" component="h2">
-          You feeling lucky?
+          Feeling lucky?
         </Typography>
         <TextField
           className="login_input"

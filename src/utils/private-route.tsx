@@ -6,7 +6,7 @@ import { useAuthContext } from './auth-context'
 import Login from '../components/login'
 
 type FilterProps = {
-  filter: boolean
+  filter?: string
 }
 
 type PrivateRouteProps = {
@@ -29,19 +29,23 @@ const PrivateRoute = ({
   permission = '',
   ...rest
 }: PrivateRouteProps): JSX.Element => {
-  const { user, refresh } = useAuthContext()
+  const { user, signIn, refresh } = useAuthContext()
 
-  const [showLogin, setShowLogin] = useState(true)
+  const [showLogin, setShowLogin] = useState(false)
   useEffect(() => {
     if (user?.user_id) {
-      if (permission) {
-        setShowLogin(!(user.permission === permission))
-      } else {
-        setShowLogin(false)
-      }
-    } else {
-      setShowLogin(true)
+      permission
+        ? setShowLogin(!(user.permission === permission))
+        : setShowLogin(false) // all users can access
+      return
     }
+
+    if (refresh) {
+      refresh()
+      return
+    }
+
+    setShowLogin(true)
   }, [user?.user_id])
 
   useEffect(() => {
@@ -59,8 +63,8 @@ const PrivateRoute = ({
       {...rest}
       render={() => (
         <>
-          {showLogin && <Login />}
-          <Filter filter={showLogin}>{children}</Filter>
+          {showLogin && <Login signIn={signIn} />}
+          <Filter filter={showLogin ? 'true' : undefined}>{children}</Filter>
         </>
       )}
     />

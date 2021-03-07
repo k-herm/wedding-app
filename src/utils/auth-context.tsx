@@ -12,12 +12,14 @@ type JWT = {
   token: string
 }
 
+export type SignInFunction = (
+  password: string,
+  cb?: () => void
+) => Promise<Response<{ token: string }>>
+
 type AuthContextType = {
   user: User
-  signIn: (
-    password: string,
-    cb?: () => void
-  ) => Promise<Response<{ token: string }>>
+  signIn: SignInFunction
   signOut: (cb?: () => void) => void
   refresh: (cb?: () => void) => void
 }
@@ -61,7 +63,7 @@ const useAuthProvider = (): AuthContextType => {
   }
 
   const signOut = (cb?: () => void) => {
-    // setUser({})
+    setUser({})
     cb && cb()
   }
 
