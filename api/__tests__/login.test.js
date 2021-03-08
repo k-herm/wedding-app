@@ -6,7 +6,7 @@ import { COOKIE_EXPIRY } from '../utils/with-auth'
 jest.mock('jsonwebtoken')
 jest.mock('../utils/hasura.ts')
 
-describe('import', () => {
+describe('login', () => {
   const user_id = 'crazy_guy_64'
   const fakeJwt = 'i am a fake'
   const cookieRegex = expiry => {

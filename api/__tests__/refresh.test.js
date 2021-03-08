@@ -5,7 +5,7 @@ import fetchQuery from '../utils/hasura'
 jest.mock('jsonwebtoken')
 jest.mock('../utils/hasura.ts')
 
-describe('import', () => {
+describe('refresh', () => {
   const user_id = 'crazy_guy_64'
   const token = 789
   const newToken = 'def'
@@ -127,28 +127,32 @@ describe('import', () => {
   })
 
   it('return an error message if there is an error with fetchQuery', async () => {
-    const headers = { cookie: '[]' }
+    const headers = { cookie: 'refreshToken=[]' }
 
     fetchQuery.mockRejectedValueOnce({ name: 'request failed' })
 
     await refresh({ headers }, res)
 
-    expect(res.status).toBeCalledWith(500)
+    expect(res.status).toBeCalledWith(401)
     expect(res.send).toBeCalledWith({
-      error: 'Something went wrong refreshing token'
+      error: 'Please try again.'
     })
   })
 
-  it('return an error message if there is an incorrect cookie', async () => {
-    const headers = { cookie: 'rando cookie' }
+  it('should send 401 if the user is not found', async () => {
+    const headers = {
+      authorization: 'Bearer someJwt',
+      cookie: `refreshToken=["abc", ${cookieExpiry}]`
+    }
 
-    fetchQuery.mockRejectedValueOnce({ name: 'request failed' })
+    fetchQuery.mockResolvedValueOnce({
+      Users: []
+    })
 
     await refresh({ headers }, res)
 
-    expect(res.status).toBeCalledWith(500)
-    expect(res.send).toBeCalledWith({
-      error: 'Something went wrong refreshing token'
-    })
+    expect(res.status).toBeCalledWith(401)
+    expect(res.send).toBeCalledWith({ error: 'Please try again.' })
+    expect(res.setHeader).not.toHaveBeenCalled()
   })
 })

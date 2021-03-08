@@ -49,8 +49,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest ./src --watchAll --runInBand --no-cache",
-    "test:api": "jest ./api --watchAll --runInBand --no-cache",
+    "test": "jest ./src --watchAll --runInBand --no-cache --collectCoverage",
+    "test:api": "jest ./api --watchAll --runInBand --no-cache --collectCoverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

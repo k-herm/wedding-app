@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { useAuthContext } from './auth-context'
 
 import Login from '../components/login'
+import { Response } from './use-request'
+import { JWT } from './auth-context'
 
 type FilterProps = {
   filter?: string
@@ -33,26 +35,33 @@ const PrivateRoute = ({
 
   const [showLogin, setShowLogin] = useState(false)
   useEffect(() => {
-    if (user?.user_id) {
-      permission
-        ? setShowLogin(!(user.permission === permission))
-        : setShowLogin(false) // all users can access
-      return
+    const getUser = async () => {
+      if (user?.user_id) {
+        permission
+          ? setShowLogin(!(user.permission === permission))
+          : setShowLogin(false) // all permissions can access
+        return
+      }
+
+      if (refresh) {
+        const response = (await refresh()) as Response<JWT>
+        if (response.data?.token) {
+          setShowLogin(false)
+        } else {
+          setShowLogin(true)
+        }
+      }
     }
 
-    if (refresh) {
-      refresh()
-      return
-    }
-
-    setShowLogin(true)
-  }, [user?.user_id])
+    getUser()
+  }, [user?.permission])
 
   useEffect(() => {
     let timer: NodeJS.Timeout
     if (user?.jwtToken) {
       timer = setTimeout(() => refresh && refresh(), 1000 * 60 * 20)
     }
+
     return () => {
       if (timer) clearTimeout(timer)
     }

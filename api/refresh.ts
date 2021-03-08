@@ -5,15 +5,22 @@ import { randomBytes } from 'crypto'
 import fetchQuery from './utils/hasura'
 import { getUserQuery, Permission, Token } from './utils/with-auth'
 
+const tokenRegex = /refreshToken=\[.*\]/g
+
 export default async (req: NowRequest, res: NowResponse): Promise<void> => {
   try {
-    if (!req.headers.cookie) {
+    const { cookie } = req.headers
+    if (!cookie || !cookie.match(tokenRegex)) {
       res.status(401).send({ error: 'Please login.' })
       return
     }
 
     const { refreshToken, exp } = parseCookie(req.headers.cookie)
     const user = await getUserRefresh(refreshToken)
+    if (!user) {
+      res.status(401).send({ error: 'Please try again.' })
+      return
+    }
 
     let permission: Permission | null = 'user'
     if (req.headers.authorization) {
@@ -75,7 +82,7 @@ function generateCookie(token: string, expiry?: number): string {
 }
 
 function parseCookie(cookie: string): Record<string, string> {
-  const token = cookie.match(/refreshToken=\[.*\]/g)
+  const token = cookie.match(tokenRegex)
   const cookieArr = JSON.parse(token[0].replace('refreshToken=', ''))
   return { refreshToken: cookieArr[0], exp: cookieArr[1] }
 }

@@ -8,20 +8,20 @@ type User = {
   jwtToken?: string
 }
 
-type JWT = {
+export type JWT = {
   token: string
 }
 
 export type SignInFunction = (
   password: string,
   cb?: () => void
-) => Promise<Response<{ token: string }>>
+) => Promise<Response<JWT>>
 
 type AuthContextType = {
   user: User
   signIn: SignInFunction
   signOut: (cb?: () => void) => void
-  refresh: (cb?: () => void) => void
+  refresh: (cb?: () => void) => Promise<Response<JWT>>
 }
 
 const useAuthProvider = (): AuthContextType => {
@@ -53,7 +53,7 @@ const useAuthProvider = (): AuthContextType => {
     return response
   }
 
-  const refresh = async (cb?: () => void) => {
+  const refresh = async (cb?: () => void): Promise<Response<JWT>> => {
     const response = (await request('/api/refresh')) as Response<JWT>
     if (response?.data?.token) {
       decodeAndSet(response.data.token)
@@ -62,6 +62,7 @@ const useAuthProvider = (): AuthContextType => {
     return response
   }
 
+  // TO DO clear cookie
   const signOut = (cb?: () => void) => {
     setUser({})
     cb && cb()

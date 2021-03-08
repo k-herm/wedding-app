@@ -62,6 +62,7 @@ const Admin = (): JSX.Element => {
             ref={inputEl}
             id="csvInput"
             name="csvInput"
+            aria-label="csv-input"
             accept=".csv"
           />
           <button type="submit" ref={submitEl}>

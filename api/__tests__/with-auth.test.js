@@ -5,7 +5,7 @@ import fetchQuery from '../utils/hasura'
 jest.mock('jsonwebtoken')
 jest.mock('../utils/hasura.ts')
 
-describe('import', () => {
+describe('with-auth', () => {
   const user_id = 'crazy_guy'
   const token = 789
   let callback
