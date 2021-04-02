@@ -17,12 +17,13 @@ export const Container = styled.div`
     display: none;
     position: absolute;
     top: 0;
-    font-family: 'Codystar', cursive;
+    font-family: 'Nunito Sans', sans-serif;
     font-size: 3.5rem;
     background: ${colors.blackGrey};
     font-weight: bold;
     color: white;
     padding: 1.2rem;
+    border-radius: 10px;
     z-index: 2;
   }
 
