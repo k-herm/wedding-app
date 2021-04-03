@@ -25,6 +25,7 @@ export const Container = styled.div`
     padding: 1.2rem;
     border-radius: 10px;
     z-index: 2;
+    text-align: center;
   }
 
   #kcImage {
@@ -47,9 +48,22 @@ export const Container = styled.div`
   #binoSVG {
     position: absolute;
   }
+
+  #reloadIcon {
+    width: 85px;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+  }
+
   @media (max-width: ${mediaBreaks.phone}px) {
     h1 {
       font-size: 2.5rem;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+    #reloadIcon {
+      width: 50px;
     }
   }
 `
