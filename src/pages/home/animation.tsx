@@ -30,7 +30,12 @@ const travelPath = (pathLength: number) => {
     { strokeDashoffset: 0, duration: 2 },
     '-=2'
   )
-  t1.to('#pathMaskReveal', { display: 'block' }, '<0.1')
+  t1.fromTo(
+    '#pathMaskReveal',
+    { display: 'none' },
+    { display: 'block' },
+    '<0.1'
+  )
 
   t1.to('h1', { display: 'none', text: '' }, '+=0.5')
 
@@ -73,13 +78,15 @@ const surprise = (vw: number) => {
   return t1
 }
 
-export default (pathLength: number, vw: number): void => {
+export default (pathLength: number, vw: number): TimelineLite => {
   const t1 = new TimelineLite({ delay: 1 })
+  t1.addLabel('start')
 
-  t1.to('#binoculars circle', { r: 850, duration: 2 })
+  t1.to('h1', { display: 'none', text: '' })
+  t1.fromTo('#binoculars circle', { r: 75 }, { r: 850, duration: 2 })
   t1.add(travelPath(pathLength))
   t1.add(surprise(vw), '+=0.5')
-  t1.to('#pathMaskReveal', { opacity: 0, duration: 0.5 })
+  t1.fromTo('#pathMaskReveal', { opacity: 1 }, { opacity: 0, duration: 0.5 })
 
   t1.fromTo(
     '#kcImage',
@@ -99,4 +106,7 @@ export default (pathLength: number, vw: number): void => {
     ease: 'none',
     delay: 1.5
   })
+
+  t1.addLabel('end')
+  return t1
 }
