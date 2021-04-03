@@ -66,6 +66,11 @@ export const Container = styled.div`
       width: 50px;
     }
   }
+  @media (min-width: 2100px) {
+    #reloadIcon {
+      right: 20rem;
+    }
+  }
 `
 
 type ClimbPathProps = {

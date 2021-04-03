@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import gsap from 'gsap'
 
 import Card from '@material-ui/core/Card'
 import TextField from '@material-ui/core/TextField'
@@ -34,12 +35,22 @@ const LoginWrapper = styled.div`
 
 type LoginProps = {
   signIn?: SignInFunction
+  showLogin: boolean
 }
 
-const Login = ({ signIn }: LoginProps): JSX.Element => {
+const Login = ({ signIn, showLogin }: LoginProps): JSX.Element => {
   const [password, setPassword] = useState('')
   const [hasError, setHasError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [removeLogin, setRemoveLogin] = useState(false)
+
+  useEffect(() => {
+    if (!showLogin) {
+      gsap
+        .to('#login_screen', { opacity: 0, duration: 0.5 })
+        .then(() => setRemoveLogin(true))
+    }
+  }, [showLogin])
 
   const handleClick = async (): Promise<void> => {
     if (signIn && password) {
@@ -54,8 +65,9 @@ const Login = ({ signIn }: LoginProps): JSX.Element => {
     }
   }
 
+  if (removeLogin) return <></>
   return (
-    <LoginWrapper>
+    <LoginWrapper id="login_screen">
       <Card className="login_card">
         <Typography gutterBottom variant="h5" component="h2">
           Feeling lucky?

@@ -83,7 +83,7 @@ export default (pathLength: number, vw: number): TimelineLite => {
   t1.addLabel('start')
 
   t1.to('h1', { display: 'none', text: '' })
-  t1.fromTo('#binoculars circle', { r: 75 }, { r: 850, duration: 2 })
+  t1.fromTo('#binoculars circle', { r: 75 }, { r: 1100, duration: 2 })
   t1.add(travelPath(pathLength))
   t1.add(surprise(vw), '+=0.5')
   t1.fromTo('#pathMaskReveal', { opacity: 1 }, { opacity: 0, duration: 0.5 })
