@@ -8,10 +8,10 @@ import { AuthProvider } from './utils/auth-context'
 
 import Home from './pages/home'
 import Admin from './pages/admin'
+import PageDoesNotExist from './pages/404'
 
 import { theme } from './theme'
 
-// TODO create 404 page
 const App = (): JSX.Element => (
   <ThemeProvider theme={theme}>
     <CssBaseline />
@@ -27,7 +27,7 @@ const App = (): JSX.Element => (
           </PrivateRoute>
 
           <Route path="*">
-            <div>This page does not exist</div>
+            <PageDoesNotExist />
           </Route>
         </Switch>
       </Router>
