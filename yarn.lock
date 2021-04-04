@@ -2286,34 +2286,34 @@
     "@typescript-eslint/types" "4.8.1"
     "eslint-visitor-keys" "^2.0.0"
 
-"@vercel/build-utils@2.7.0":
-  "integrity" "sha512-WyTjeFpIOfUTLWB+LrJEAbs03SKD0lcA26CMt2tzPF+jaGL/hjCcRxkZJhMSRUu3LAesjKtQ7zGUuFtV0l5S3w=="
-  "resolved" "https://registry.npmjs.org/@vercel/build-utils/-/build-utils-2.7.0.tgz"
-  "version" "2.7.0"
+"@vercel/build-utils@2.10.1":
+  "integrity" "sha512-K5xaXoZnysKXxuc5YuR9NZxzBaS9UZYI+TGQCrpx+n1jFJMnVKcXTIlcGtsbNzVI1PR8Fx7YgjtAChSoIyBznQ=="
+  "resolved" "https://registry.npmjs.org/@vercel/build-utils/-/build-utils-2.10.1.tgz"
+  "version" "2.10.1"
 
-"@vercel/go@1.1.7":
-  "integrity" "sha512-eNWXjOd6SVo7oOTQORZEt2eBfAKTHHgIZByuemrRMPybaOX/U3UeVb/kKjxijVNCr8Um6VlfurldTkB0LQ917w=="
-  "resolved" "https://registry.npmjs.org/@vercel/go/-/go-1.1.7.tgz"
-  "version" "1.1.7"
+"@vercel/go@1.2.2":
+  "integrity" "sha512-Oo1lXjXmDrSqdF3LKCWXJGU9DInq5aMe6weQSoWnKRvSZ6v4at2x19ltHYvgUO95y4tbdzqPLRKFNUSQEJVdjQ=="
+  "resolved" "https://registry.npmjs.org/@vercel/go/-/go-1.2.2.tgz"
+  "version" "1.2.2"
 
-"@vercel/node@^1.9.0", "@vercel/node@1.9.0":
-  "integrity" "sha512-Vk/ZpuY4Cdc8oUwBi/kf8qETRaJb/KYdFddVkLuS10QwA0yJx+RQ11trhZ1KFUdc27aBr5S2k8/dDxK8sLr+IA=="
-  "resolved" "https://registry.npmjs.org/@vercel/node/-/node-1.9.0.tgz"
-  "version" "1.9.0"
+"@vercel/node@^1.9.0", "@vercel/node@1.9.1":
+  "integrity" "sha512-sZIEk6UtJhbW4qRSCTnTWnGOT7UR6ZrhhSvK6z9AAS/BRc+Jz1/nbwPlYjT7HjZySo32VAwpeq2VHOd3hyxKGw=="
+  "resolved" "https://registry.npmjs.org/@vercel/node/-/node-1.9.1.tgz"
+  "version" "1.9.1"
   dependencies:
     "@types/node" "*"
     "ts-node" "8.9.1"
     "typescript" "3.9.3"
 
-"@vercel/python@1.2.4":
-  "integrity" "sha512-XD3G8RxBZYed50v3Gi1DCxrDremRUwX5rbkYtuS3LJwYB3cxdksc0BhHjds2gexcPljeyTFN2JDZ2weIJn8NhA=="
-  "resolved" "https://registry.npmjs.org/@vercel/python/-/python-1.2.4.tgz"
-  "version" "1.2.4"
+"@vercel/python@2.0.1":
+  "integrity" "sha512-qrb6y1VYLq0x0uziW3/w6UZ1GNvNpeoM3aTfjFayr2CMZJ665J9lUaqbZhdH2/q4qw6VrBrlw3FYjr5HUpAFrw=="
+  "resolved" "https://registry.npmjs.org/@vercel/python/-/python-2.0.1.tgz"
+  "version" "2.0.1"
 
-"@vercel/ruby@1.2.5":
-  "integrity" "sha512-Rl7rS46ShZktgBTYqjF7yXczsRx24tjak/LbceWsjaPmtOoQrpuvElknAtZgvOpCib5r4toLYZXu0BNQgkXn0w=="
-  "resolved" "https://registry.npmjs.org/@vercel/ruby/-/ruby-1.2.5.tgz"
-  "version" "1.2.5"
+"@vercel/ruby@1.2.6":
+  "integrity" "sha512-ZLDMxMvOL0xd7FBHXQJ9EJxPohw+qzpgwulaNhXGgPuFUfnS9mboUEyj0sU9A9F7lMJFPJ6gs8UfVxBY2eNnGA=="
+  "resolved" "https://registry.npmjs.org/@vercel/ruby/-/ruby-1.2.6.tgz"
+  "version" "1.2.6"
 
 "@webassemblyjs/ast@1.9.0":
   "integrity" "sha512-C6wW5L+b7ogSDVqymbkkvuW9kruN//YisMED04xzeBBqjHa2FYnmvOlS6Xj68xWQRgWvI9cIglsjFowH/RJyEA=="
@@ -12590,16 +12590,16 @@
   "resolved" "https://registry.npmjs.org/vendors/-/vendors-1.0.4.tgz"
   "version" "1.0.4"
 
-"vercel@^21.1.0":
-  "integrity" "sha512-01NKN1V7oAq4oxkm7OPw/SNMsnF+UPX2OTgq5SxUKyZlz34aqvj+LvEjs4KWNGXFzTAelmuFze7VOObvmB7mug=="
-  "resolved" "https://registry.npmjs.org/vercel/-/vercel-21.1.0.tgz"
-  "version" "21.1.0"
+"vercel@^21.3.3":
+  "integrity" "sha512-NhxhAmpUoymKQp2WT0PR+NgFPcoVRuhYJ7HSSPKP+S0UCQtZNhy9YCeMkbBzooAw9rrb8gEH+ODEbhK0u5YlFg=="
+  "resolved" "https://registry.npmjs.org/vercel/-/vercel-21.3.3.tgz"
+  "version" "21.3.3"
   dependencies:
-    "@vercel/build-utils" "2.7.0"
-    "@vercel/go" "1.1.7"
-    "@vercel/node" "1.9.0"
-    "@vercel/python" "1.2.4"
-    "@vercel/ruby" "1.2.5"
+    "@vercel/build-utils" "2.10.1"
+    "@vercel/go" "1.2.2"
+    "@vercel/node" "1.9.1"
+    "@vercel/python" "2.0.1"
+    "@vercel/ruby" "1.2.6"
     "update-notifier" "4.1.0"
 
 "verror@1.10.0":
