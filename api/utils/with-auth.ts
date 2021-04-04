@@ -1,12 +1,12 @@
-import { NowRequest, NowResponse } from '@vercel/node'
+import { VercelRequest, VercelResponse } from '@vercel/node'
 import jwt from 'jsonwebtoken'
 import fetchQuery from './hasura'
 
 export const COOKIE_EXPIRY = 1000 * 60 * 60 * 24 * 365
 
 export default async (
-  req: NowRequest,
-  res: NowResponse,
+  req: VercelRequest,
+  res: VercelResponse,
   allowedPermission: Permission,
   callback: () => Promise<void>
 ): Promise<void> => {

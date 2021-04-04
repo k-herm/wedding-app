@@ -49,6 +49,7 @@ const Rsvp = (): JSX.Element => {
     setGuests(guests)
   }
 
+  // TO DO add a modal - confirm i will not be attending
   const handleRsvp = async () => {
     let missingData = false
     guests.forEach(guest => {

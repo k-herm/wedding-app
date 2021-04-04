@@ -1,4 +1,4 @@
-import { NowRequest, NowResponse } from '@vercel/node'
+import { VercelRequest, VercelResponse } from '@vercel/node'
 import jwt from 'jsonwebtoken'
 import { randomBytes } from 'crypto'
 
@@ -7,7 +7,10 @@ import { getUserQuery, Permission, Token } from './utils/with-auth'
 
 const tokenRegex = /refreshToken=\[.*\]/g
 
-export default async (req: NowRequest, res: NowResponse): Promise<void> => {
+export default async (
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> => {
   try {
     const { cookie } = req.headers
     if (!cookie || !cookie.match(tokenRegex)) {
@@ -50,7 +53,7 @@ function getPermissionFromJwt(token: string): Permission | null {
 }
 
 export function setCookieAndJwt(
-  res: NowResponse,
+  res: VercelResponse,
   data: Token,
   permission: Permission,
   expiry?: number

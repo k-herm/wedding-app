@@ -1,4 +1,4 @@
-import { NowRequest, NowResponse } from '@vercel/node'
+import { VercelRequest, VercelResponse } from '@vercel/node'
 import withAuth from './utils/with-auth'
 import fetchQuery from './utils/hasura'
 import { ValidationError } from './utils/validation-error'
@@ -14,7 +14,10 @@ const query = (email: string) => `
   }
 `
 
-export default async (req: NowRequest, res: NowResponse): Promise<void> => {
+export default async (
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> => {
   // withAuth(req, res, 'user', async () => {
   try {
     if (!req.body?.email) {

@@ -1,4 +1,4 @@
-import { NowRequest, NowResponse } from '@vercel/node'
+import { VercelRequest, VercelResponse } from '@vercel/node'
 import S from 'fluent-json-schema'
 import Ajv from 'ajv'
 import withAuth from './utils/with-auth'
@@ -21,7 +21,10 @@ const mutation = (guest: Guest) => `
   }
 `
 
-export default async (req: NowRequest, res: NowResponse): Promise<void> => {
+export default async (
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> => {
   // withAuth(req, res, 'user', async () => {
   try {
     const ajv = new Ajv({ allErrors: true })
@@ -45,7 +48,7 @@ export default async (req: NowRequest, res: NowResponse): Promise<void> => {
     let errorMessage = 'Something went wrong during update'
     let code = 500
     if (error.name === 'ValidationError') {
-      errorMessage = error.errors[0].message
+      errorMessage = error.errors
       code = 400
     }
 

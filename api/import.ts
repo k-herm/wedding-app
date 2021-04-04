@@ -1,4 +1,4 @@
-import { NowRequest, NowResponse } from '@vercel/node'
+import { VercelRequest, VercelResponse } from '@vercel/node'
 import S from 'fluent-json-schema'
 import Ajv from 'ajv'
 import withAuth from './utils/with-auth'
@@ -30,7 +30,7 @@ export const mutation = (guests: Guest[]): string => `
   }
 `
 
-export default async (req: NowRequest, res: NowResponse): Promise<void> =>
+export default async (req: VercelRequest, res: VercelResponse): Promise<void> =>
   withAuth(req, res, 'admin', async () => {
     try {
       const ajv = new Ajv({ allErrors: true })
