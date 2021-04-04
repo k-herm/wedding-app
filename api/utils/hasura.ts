@@ -17,6 +17,9 @@ type Data = {
   update_Users?: {
     returning: [Record<string, unknown>]
   }
+  update_Guests?: {
+    returning: [Record<string, unknown>]
+  }
 }
 
 async function query({ query, variables = {} }: Query): Promise<Data> {

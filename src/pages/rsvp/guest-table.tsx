@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, ChangeEvent } from 'react'
 import styled from 'styled-components'
 
 import Table from '@material-ui/core/Table'
@@ -11,10 +11,15 @@ import Paper from '@material-ui/core/Paper'
 import Checkbox from '@material-ui/core/Checkbox'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
+import FormControl from '@material-ui/core/FormControl'
+import FormHelperText from '@material-ui/core/FormHelperText'
 
 import { Guest } from './index'
+import { foodChoices } from '../../constants'
 
 const TableWrapper = styled.div`
+  width: 100%;
+
   .select {
     width: 100%;
   }
@@ -23,14 +28,33 @@ const TableWrapper = styled.div`
 type GuestTableProps = {
   guests: Guest[]
   setGuests: Dispatch<SetStateAction<Guest[]>>
+  error: boolean
 }
 
-const GuestTable = ({ guests, setGuests }: GuestTableProps): JSX.Element => {
-  const handleCheck = (guest: Guest) => {
+const GuestTable = ({
+  guests,
+  setGuests,
+  error
+}: GuestTableProps): JSX.Element => {
+  const handleCheck = (e: ChangeEvent<{ checked: boolean }>, guest: Guest) => {
     setGuests(
       [...guests].map(g => {
         if (g.first_name === guest.first_name) {
-          g.attending = !g.attending
+          g.attending = e.target.checked
+          if (!g.attending) {
+            g.food_preference = ''
+          }
+        }
+        return g
+      })
+    )
+  }
+
+  const handleSelect = (e: ChangeEvent<{ value: unknown }>, guest: Guest) => {
+    setGuests(
+      [...guests].map(g => {
+        if (g.first_name === guest.first_name) {
+          g.food_preference = e.target.value as string
         }
         return g
       })
@@ -40,7 +64,7 @@ const GuestTable = ({ guests, setGuests }: GuestTableProps): JSX.Element => {
   return (
     <TableWrapper>
       <TableContainer component={Paper}>
-        <Table className="table" aria-label="guest-list">
+        <Table aria-label="guest-list">
           {guests.length ? (
             <TableHead>
               <TableRow>
@@ -63,7 +87,7 @@ const GuestTable = ({ guests, setGuests }: GuestTableProps): JSX.Element => {
                 <TableCell align="center">
                   <Checkbox
                     checked={guest.attending}
-                    onChange={() => handleCheck(guest)}
+                    onChange={e => handleCheck(e, guest)}
                     color="primary"
                     size="small"
                     inputProps={{
@@ -72,18 +96,30 @@ const GuestTable = ({ guests, setGuests }: GuestTableProps): JSX.Element => {
                   />
                 </TableCell>
                 <TableCell>
-                  <Select
-                    // value={age}
-                    // onChange={handleChange}
+                  <FormControl
                     className="select"
-                    inputProps={{
-                      'aria-label': `${guest.first_name} food preference`
-                    }}
+                    error={error && !guest.food_preference}
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
+                    <Select
+                      value={guest.food_preference || ''}
+                      onChange={e => handleSelect(e, guest)}
+                      disabled={!guest.attending}
+                      inputProps={{
+                        'aria-label': `${guest.first_name} food preference`
+                      }}
+                    >
+                      {foodChoices.map((choice, i) => (
+                        <MenuItem key={`${choice}_${i}`} value={choice}>
+                          {choice}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {error && !guest.food_preference && (
+                      <FormHelperText>
+                        Mmm don&apos;t want to forget this one!
+                      </FormHelperText>
+                    )}
+                  </FormControl>
                 </TableCell>
               </TableRow>
             ))}
