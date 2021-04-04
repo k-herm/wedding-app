@@ -8,6 +8,7 @@ import { AuthProvider } from './utils/auth-context'
 
 import Home from './pages/home'
 import Admin from './pages/admin'
+import Rsvp from './pages/rsvp'
 import PageDoesNotExist from './pages/404'
 
 import { theme } from './theme'
@@ -20,6 +21,10 @@ const App = (): JSX.Element => (
         <Switch>
           <Route exact path="/">
             <Home />
+          </Route>
+
+          <Route path="/rsvp">
+            <Rsvp />
           </Route>
 
           <PrivateRoute path="/admin" permission="admin">
