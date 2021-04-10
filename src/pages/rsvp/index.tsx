@@ -1,26 +1,32 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEvent } from 'react'
 import gsap from 'gsap'
 
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import FormHelperText from '@material-ui/core/FormHelperText'
+
 import GuestTable from './guest-table'
+import ConfirmDialog from './confirm-dialog'
 import { Wrapper } from './index-sc'
 
 import useRequest from '../../utils/use-request'
-import { weddingDate, weddingTime } from '../../constants'
+import { weddingDate, weddingTime, rsvpDeadline } from '../../constants'
 
 export type Guest = {
   first_name: string
   last_name: string
   attending: boolean
   food_preference: string
+  submitted: boolean
 }
 
 const Rsvp = (): JSX.Element => {
-  const [email, setEmail] = useState('')
+  const [name, setName] = useState({ firstName: '', lastName: '' })
   const [guests, setGuests] = useState<Guest[]>([])
+  const [guestsNotAttending, setGuestsNotAttending] = useState<Guest[]>([])
+  const [openDialog, setOpenDialog] = useState(false)
   const [hasRsvpError, setHasRsvpError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -31,9 +37,12 @@ const Rsvp = (): JSX.Element => {
   //   }
   // }, [guests])
 
-  // TO DO = if you've already rsvp'd, ask them to email you to update (after a certain date)
   const getInvite = async (): Promise<void> => {
-    const response = await request('/api/get-invite', { email })
+    const response = await request('/api/get-invite', {
+      first_name: name.firstName,
+      last_name: name.lastName
+    })
+
     if (response.error) {
       setErrorMessage(response.error)
       return
@@ -41,29 +50,54 @@ const Rsvp = (): JSX.Element => {
     const guests = response.data as Guest[]
     if (!guests.length) {
       setErrorMessage(
-        'Sorry we could not find your email. Try another or drop us a message!'
+        'Sorry we could not find your invite. Try another name or drop us a message!'
       )
       return
     }
+
+    if (new Date() > rsvpDeadline && guests[0].submitted) {
+      setErrorMessage('Need to update your rsvp? Send us an email!')
+      return
+    }
+
     setErrorMessage('')
     setGuests(guests)
   }
 
-  // TO DO add a modal - confirm i will not be attending
+  const onSubmit = async () => {
+    setHasRsvpError(false)
+    const response = await request('/api/send-rsvp', {
+      data: guests.map(guest => ({ ...guest, submitted: true }))
+    })
+    console.log(response)
+  }
+
   const handleRsvp = async () => {
     let missingData = false
+    const notComing: Guest[] = []
     guests.forEach(guest => {
       if (guest.attending && !guest.food_preference) {
         missingData = true
         setHasRsvpError(true)
       }
+      if (!guest.attending) {
+        notComing.push(guest)
+      }
     })
+
+    setGuestsNotAttending(notComing)
+    if (!missingData && notComing.length) {
+      setOpenDialog(true)
+      return
+    }
+
     if (!missingData) {
-      setHasRsvpError(false)
-      const response = await request('/api/send-rsvp', { data: guests })
-      console.log(response)
+      await onSubmit()
     }
   }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setName({ ...name, [e.target.name]: e.target.value })
 
   return (
     <Wrapper>
@@ -94,18 +128,31 @@ const Rsvp = (): JSX.Element => {
           </Typography>
         </div>
 
-        <TextField
-          required
-          name="email"
-          label="Email"
-          inputProps={{ 'aria-label': 'email' }}
-          type="text"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          fullWidth
-          error={!!errorMessage}
-          helperText={errorMessage}
-        />
+        <div className="textFields">
+          <TextField
+            required
+            name="firstName"
+            label="First Name"
+            inputProps={{ 'aria-label': 'first name' }}
+            type="text"
+            value={name.firstName}
+            onChange={handleChange}
+          />
+
+          <TextField
+            required
+            name="lastName"
+            label="Last Name"
+            inputProps={{ 'aria-label': 'last name' }}
+            type="text"
+            value={name.lastName}
+            onChange={handleChange}
+          />
+
+          {errorMessage && (
+            <FormHelperText error>{errorMessage}</FormHelperText>
+          )}
+        </div>
 
         <GuestTable
           setGuests={setGuests}
@@ -130,6 +177,13 @@ const Rsvp = (): JSX.Element => {
           )}
         </div>
       </Card>
+
+      <ConfirmDialog
+        isOpen={openDialog}
+        setIsOpen={setOpenDialog}
+        guestsNotAttending={guestsNotAttending}
+        onSubmit={onSubmit}
+      />
     </Wrapper>
   )
 }

@@ -16,12 +16,20 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 
 import { Guest } from './index'
 import { foodChoices } from '../../constants'
+import { mediaBreaks } from '../../theme'
 
 const TableWrapper = styled.div`
   width: 100%;
 
   .select {
     width: 100%;
+  }
+
+  @media (max-width: ${mediaBreaks.phone}px) {
+    th,
+    td {
+      padding: 0.75rem;
+    }
   }
 `
 
@@ -36,14 +44,11 @@ const GuestTable = ({
   setGuests,
   error
 }: GuestTableProps): JSX.Element => {
-  const handleCheck = (e: ChangeEvent<{ checked: boolean }>, guest: Guest) => {
+  const handleCheck = (e: ChangeEvent<HTMLInputElement>, guest: Guest) => {
     setGuests(
-      [...guests].map(g => {
+      guests.map(g => {
         if (g.first_name === guest.first_name) {
           g.attending = e.target.checked
-          if (!g.attending) {
-            g.food_preference = ''
-          }
         }
         return g
       })
@@ -52,7 +57,7 @@ const GuestTable = ({
 
   const handleSelect = (e: ChangeEvent<{ value: unknown }>, guest: Guest) => {
     setGuests(
-      [...guests].map(g => {
+      guests.map(g => {
         if (g.first_name === guest.first_name) {
           g.food_preference = e.target.value as string
         }
@@ -78,51 +83,52 @@ const GuestTable = ({
           )}
 
           <TableBody>
-            {guests.map(guest => (
-              <TableRow key={JSON.stringify(guest)}>
-                <TableCell
-                  component="th"
-                  scope="row"
-                >{`${guest.first_name} ${guest.last_name}`}</TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={guest.attending}
-                    onChange={e => handleCheck(e, guest)}
-                    color="primary"
-                    size="small"
-                    inputProps={{
-                      'aria-label': `${guest.first_name} attending`
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControl
-                    className="select"
-                    error={error && !guest.food_preference}
-                  >
-                    <Select
-                      value={guest.food_preference || ''}
-                      onChange={e => handleSelect(e, guest)}
-                      disabled={!guest.attending}
+            {guests.map(guest => {
+              const hasError =
+                error && guest.attending && !guest.food_preference
+              return (
+                <TableRow key={JSON.stringify(guest)}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                  >{`${guest.first_name} ${guest.last_name}`}</TableCell>
+                  <TableCell align="center">
+                    <Checkbox
+                      checked={guest.attending}
+                      onChange={e => handleCheck(e, guest)}
+                      color="primary"
+                      size="small"
                       inputProps={{
-                        'aria-label': `${guest.first_name} food preference`
+                        'aria-label': `${guest.first_name} attending`
                       }}
-                    >
-                      {foodChoices.map((choice, i) => (
-                        <MenuItem key={`${choice}_${i}`} value={choice}>
-                          {choice}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {error && !guest.food_preference && (
-                      <FormHelperText>
-                        Mmm don&apos;t want to forget this one!
-                      </FormHelperText>
-                    )}
-                  </FormControl>
-                </TableCell>
-              </TableRow>
-            ))}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <FormControl className="select" error={hasError}>
+                      <Select
+                        value={guest.food_preference || ''}
+                        onChange={e => handleSelect(e, guest)}
+                        disabled={!guest.attending}
+                        inputProps={{
+                          'aria-label': `${guest.first_name} food preference`
+                        }}
+                      >
+                        {foodChoices.map((choice, i) => (
+                          <MenuItem key={`${choice}_${i}`} value={choice}>
+                            {choice}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {hasError && (
+                        <FormHelperText>
+                          Mmm don&apos;t want to forget this one!
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>

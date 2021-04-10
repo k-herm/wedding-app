@@ -8,14 +8,26 @@ import { ValidationError } from './utils/validation-error'
 const mutation = (guest: Guest) => `
   mutation updateGuests {
     update_Guests(
-      where: {first_name: {_eq: "${guest.first_name}"}, last_name: {_eq: "${guest.last_name}"}}, 
-      _set: {attending: ${guest.attending}, food_preference: "${guest.food_preference}"}
+      where: {
+        first_name: {_eq: "${guest.first_name}"}, 
+        last_name: {_eq: "${guest.last_name}"}
+      }, 
+      _set: {
+        attending: ${guest.attending}, 
+        ${
+          guest.food_preference
+            ? `food_preference: "${guest.food_preference}",`
+            : ''
+        } 
+        submitted: "${guest.submitted}"
+      }
     ) {
       returning {
         attending
         first_name
         food_preference
         last_name
+        submitted
       }
     }
   }
@@ -29,7 +41,7 @@ export default async (
   try {
     const ajv = new Ajv({ allErrors: true })
     const validateBody = ajv.compile(bodySchema)
-    console.log(req.body)
+
     if (!validateBody(req.body)) {
       throw new ValidationError(validateBody.errors)
     }
@@ -63,6 +75,7 @@ export type Guest = {
   last_name: string
   attending: boolean
   food_preference: string
+  submitted: boolean
 }
 
 const bodySchema = S.object()
@@ -74,7 +87,8 @@ const bodySchema = S.object()
           .prop('first_name', S.string().required())
           .prop('last_name', S.string().required())
           .prop('attending', S.boolean().required())
-          .prop('food_preference', S.string().required())
+          .prop('food_preference', S.string().raw({ nullable: true }))
+          .prop('submitted', S.boolean().required())
       )
       .required()
   )
