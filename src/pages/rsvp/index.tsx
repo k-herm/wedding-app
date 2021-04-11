@@ -36,17 +36,15 @@ const Rsvp = (): JSX.Element => {
 
   return (
     <Wrapper>
-      {showThankYou ? (
-        <ThankYou guests={guests} />
-      ) : (
-        <RsvpForm
-          guests={guests}
-          setGuests={setGuests}
-          setGuestsNotAttending={setGuestsNotAttending}
-          onSubmit={onSubmit}
-          setOpenDialog={setOpenDialog}
-        />
-      )}
+      <ThankYou guests={guests} showCard={showThankYou} />
+      <RsvpForm
+        guests={guests}
+        setGuests={setGuests}
+        setGuestsNotAttending={setGuestsNotAttending}
+        onSubmit={onSubmit}
+        setOpenDialog={setOpenDialog}
+        showCard={!showThankYou}
+      />
       <ConfirmDialog
         isOpen={openDialog}
         setIsOpen={setOpenDialog}

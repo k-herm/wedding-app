@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, Dispatch, SetStateAction } from 'react'
+import React, {
+  useState,
+  useEffect,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction
+} from 'react'
 
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
@@ -10,6 +16,7 @@ import GuestTable from './guest-table'
 import { Guest } from './index'
 import { weddingDate, weddingTime, rsvpDeadline } from '../../constants'
 import { capitalize } from '../../utils/helpers'
+import { cardIn, cardOut } from './animation'
 import useRequest from '../../utils/use-request'
 
 type RsvpFormProps = {
@@ -18,6 +25,7 @@ type RsvpFormProps = {
   setGuestsNotAttending: Dispatch<SetStateAction<Guest[]>>
   onSubmit: () => void
   setOpenDialog: Dispatch<SetStateAction<boolean>>
+  showCard: boolean
 }
 
 const RsvpForm = ({
@@ -25,11 +33,19 @@ const RsvpForm = ({
   setGuests,
   setGuestsNotAttending,
   onSubmit,
-  setOpenDialog
+  setOpenDialog,
+  showCard
 }: RsvpFormProps): JSX.Element => {
   const [name, setName] = useState({ firstName: '', lastName: '' })
   const [errorMessage, setErrorMessage] = useState('')
   const [hasRsvpError, setHasRsvpError] = useState(false)
+
+  useEffect(() => {
+    cardIn()
+    return () => {
+      cardOut()
+    }
+  }, [showCard])
 
   const request = useRequest()
 
@@ -88,7 +104,7 @@ const RsvpForm = ({
     setName({ ...name, [e.target.name]: e.target.value })
 
   return (
-    <Card className="rsvp_card" raised>
+    <Card className={`rsvp_card ${showCard ? 'cardIn' : 'cardOut'}`} raised>
       <div>
         <Typography variant="h2" align="center" gutterBottom>
           r.s.v.p

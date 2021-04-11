@@ -1,27 +1,32 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 
 import { Guest } from './index'
-
+import { cardIn, cardOut } from './animation'
 import useRequest from '../../utils/use-request'
 
 type ThankYouCardProps = {
   guests: Guest[]
+  showCard: boolean
 }
 
-const ThankYouCard = ({ guests }: ThankYouCardProps): JSX.Element => {
+const ThankYouCard = ({ guests, showCard }: ThankYouCardProps): JSX.Element => {
   const emails = guests.map(guest => guest.email)
   const notAttending = guests.every(guest => !guest.attending)
 
   useEffect(() => {
     // const request = useRequest()
     // TO DO send condirmation email
-  }, [])
+    cardIn()
+    return () => {
+      cardOut()
+    }
+  }, [showCard])
 
   return (
-    <Card className="rsvp_card" raised>
+    <Card className={`rsvp_card ${showCard ? 'cardIn' : 'cardOut'}`} raised>
       <div>
         <Typography variant="h2" align="center" gutterBottom>
           r.s.v.p

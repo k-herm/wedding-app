@@ -62,6 +62,14 @@ export const Wrapper = styled.div`
     vertical-align: middle;
   }
 
+  // for animations
+  .cardIn {
+    display: grid;
+  }
+  .cardOut {
+    display: none;
+  }
+
   @media (max-width: ${mediaBreaks.phone}px) {
     .rsvp_card {
       padding: 0.8rem;
