@@ -62,13 +62,16 @@ const GuestTable = ({
         onComplete: () => ref.current?.scrollIntoView({ behavior: 'smooth' })
       })
     }
-  }, [guests])
+  }, [guests.length])
 
   const handleCheck = (e: ChangeEvent<HTMLInputElement>, guest: Guest) => {
     setGuests(
       guests.map(g => {
         if (g.first_name === guest.first_name) {
           g.attending = e.target.checked
+          if (!e.target.checked) {
+            g.food_preference = ''
+          }
         }
         return g
       })
@@ -141,7 +144,7 @@ const GuestTable = ({
                       </Select>
                       {hasError && (
                         <FormHelperText>
-                          Mmm don&apos;t want to forget this one!
+                          Mmm don&apos;t want to forget to pick one!
                         </FormHelperText>
                       )}
                     </FormControl>

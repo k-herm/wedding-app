@@ -18,6 +18,10 @@ const DialogWrapper = styled.div`
   p {
     text-align: center;
   }
+  ul {
+    margin-bottom: 1rem;
+  }
+
   .MuiDialogActions-root {
     justify-content: space-between;
   }

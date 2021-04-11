@@ -24,6 +24,10 @@ export const Wrapper = styled.div`
     margin: 0.5rem;
   }
 
+  .MuiFormHelperText-root {
+    font-size: 0.9rem;
+  }
+
   .textFields {
     width: 100%;
     display: flex;

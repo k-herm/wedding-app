@@ -14,11 +14,9 @@ const mutation = (guest: Guest) => `
       }, 
       _set: {
         attending: ${guest.attending}, 
-        ${
-          guest.food_preference
-            ? `food_preference: "${guest.food_preference}",`
-            : ''
-        } 
+        food_preference: ${
+          guest.food_preference ? `"${guest.food_preference}"` : 'null'
+        },
         submitted: "${guest.submitted}"
       }
     ) {
