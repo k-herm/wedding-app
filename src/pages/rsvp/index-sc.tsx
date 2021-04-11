@@ -16,6 +16,16 @@ export const Wrapper = styled.div`
     font-weight: 600;
   }
 
+  h5 {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+  }
+
   .rsvp_card {
     display: grid;
     grid-gap: 2rem;

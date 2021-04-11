@@ -26,6 +26,7 @@ const mutation = (guest: Guest) => `
         food_preference
         last_name
         submitted
+        email
       }
     }
   }
