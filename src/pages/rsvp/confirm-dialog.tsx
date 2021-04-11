@@ -23,6 +23,7 @@ const DialogWrapper = styled.div`
   }
   .MuiDialogContent-root {
     min-width: 250px;
+    margin-bottom: 1rem;
   }
 `
 
@@ -66,10 +67,10 @@ const ConfirmDialog = ({
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="primary" variant="outlined">
             Whoops!
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} color="primary" variant="contained">
             Confirm
           </Button>
         </DialogActions>

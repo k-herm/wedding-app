@@ -101,7 +101,7 @@ const Rsvp = (): JSX.Element => {
 
   return (
     <Wrapper>
-      <Card className="rsvp_card">
+      <Card className="rsvp_card" raised>
         <div>
           <Typography variant="h2" align="center" gutterBottom>
             r.s.v.p
@@ -160,10 +160,13 @@ const Rsvp = (): JSX.Element => {
           error={hasRsvpError}
         />
 
-        {/* TO DO = add email link */}
-        {/* TO DO = option to find a different invite???? */}
         <div className="buttons">
-          <Button variant="outlined" color="primary">
+          <Button
+            variant="outlined"
+            color="primary"
+            component="a"
+            href="mailto:kiesha.herman@gmail.com"
+          >
             Email us
           </Button>
           {guests.length ? (

@@ -6,7 +6,8 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: ${colors.lightGreen};
+  background: ${colors.lightGreen} url('flower-frame.png') no-repeat fixed
+    center;
 
   h2,
   h3,
@@ -53,6 +54,9 @@ export const Wrapper = styled.div`
     }
     h3 {
       font-size: 2.75rem;
+    }
+    h4 {
+      font-size: 1.75rem;
     }
   }
 `

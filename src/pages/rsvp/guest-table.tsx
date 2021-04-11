@@ -1,5 +1,12 @@
-import React, { Dispatch, SetStateAction, ChangeEvent } from 'react'
+import React, {
+  useEffect,
+  useRef,
+  Dispatch,
+  SetStateAction,
+  ChangeEvent
+} from 'react'
 import styled from 'styled-components'
+import gsap from 'gsap'
 
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -44,6 +51,19 @@ const GuestTable = ({
   setGuests,
   error
 }: GuestTableProps): JSX.Element => {
+  const ref = useRef<HTMLElement>()
+  useEffect(() => {
+    if (guests.length) {
+      gsap.from('.MuiTableContainer-root', {
+        opacity: 0,
+        height: 0,
+        display: 'none',
+        duration: 0.7,
+        onComplete: () => ref.current?.scrollIntoView({ behavior: 'smooth' })
+      })
+    }
+  }, [guests])
+
   const handleCheck = (e: ChangeEvent<HTMLInputElement>, guest: Guest) => {
     setGuests(
       guests.map(g => {
@@ -68,7 +88,7 @@ const GuestTable = ({
 
   return (
     <TableWrapper>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} ref={ref}>
         <Table aria-label="guest-list">
           {guests.length ? (
             <TableHead>

@@ -68,7 +68,7 @@ const Login = ({ signIn, showLogin }: LoginProps): JSX.Element => {
   if (removeLogin) return <></>
   return (
     <LoginWrapper id="login_screen">
-      <Card className="login_card">
+      <Card className="login_card" raised>
         <Typography gutterBottom variant="h5" component="h2">
           Feeling lucky?
         </Typography>
