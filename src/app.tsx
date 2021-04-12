@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
+import PageTransition from './components/page-transition'
 import PrivateRoute from './utils/private-route'
 import { AuthProvider } from './utils/auth-context'
 
@@ -20,23 +21,25 @@ const App = (): JSX.Element => (
       <CssBaseline />
       <AuthProvider>
         <Router>
-          <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
+          <PageTransition>
+            <Switch>
+              <Route exact path="/">
+                <Home />
+              </Route>
 
-            <Route path="/rsvp">
-              <Rsvp />
-            </Route>
+              <Route path="/rsvp">
+                <Rsvp />
+              </Route>
 
-            <PrivateRoute path="/admin" permission="admin">
-              <Admin />
-            </PrivateRoute>
+              <PrivateRoute path="/admin" permission="admin">
+                <Admin />
+              </PrivateRoute>
 
-            <Route path="*">
-              <PageDoesNotExist />
-            </Route>
-          </Switch>
+              <Route path="*">
+                <PageDoesNotExist />
+              </Route>
+            </Switch>
+          </PageTransition>
         </Router>
       </AuthProvider>
     </ThemeProvider>

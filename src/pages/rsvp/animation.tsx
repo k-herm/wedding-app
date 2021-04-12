@@ -15,8 +15,8 @@ export const cardIn = (): void => {
     scale: 1,
     motionPath: {
       path: [
-        { x: 0, y: -200 },
-        { x: -200, y: -200 },
+        { x: 0, y: -300 },
+        { x: -300, y: -300 },
         { x: 0, y: 0 }
       ],
       curviness: 2
@@ -34,8 +34,8 @@ export const cardOut = (): void => {
     motionPath: {
       path: [
         { x: 0, y: 0 },
-        { x: 200, y: -200 },
-        { x: 0, y: -200 }
+        { x: 300, y: -300 },
+        { x: 0, y: -300 }
       ],
       curviness: 2
     }

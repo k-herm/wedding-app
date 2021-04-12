@@ -54,7 +54,9 @@ const ThankYouCard = ({ guests, showCard }: ThankYouCardProps): JSX.Element => {
           gutterBottom
         >
           A confirmation has been sent to:
-          <ul>{emails.map(email => (email ? <li>{email}</li> : <></>))}</ul>
+          <ul>
+            {emails.map(email => (email ? <li key={email}>{email}</li> : null))}
+          </ul>
         </Typography>
       </div>
 
