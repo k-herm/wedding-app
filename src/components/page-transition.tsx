@@ -29,7 +29,7 @@ const PageTransition = ({ children }: PageTransitionProps): JSX.Element => {
     t1.fromTo('#slider', { width: '0%' }, { width: '100%', duration: 1 })
     t1.to('#slider', { width: '0%', display: 'none', duration: 1 })
   }, [location])
-
+  console.log('test')
   return (
     <TransitionWrapper>
       <div id="slider" />
