@@ -22,23 +22,25 @@ const App = (): JSX.Element => (
       <AuthProvider>
         <Router>
           <PageTransition>
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
+            {({ location }) => (
+              <Switch location={location}>
+                <Route exact path="/">
+                  <Home />
+                </Route>
 
-              <Route path="/rsvp">
-                <Rsvp />
-              </Route>
+                <Route path="/rsvp">
+                  <Rsvp />
+                </Route>
 
-              <PrivateRoute path="/admin" permission="admin">
-                <Admin />
-              </PrivateRoute>
+                <PrivateRoute path="/admin" permission="admin">
+                  <Admin />
+                </PrivateRoute>
 
-              <Route path="*">
-                <PageDoesNotExist />
-              </Route>
-            </Switch>
+                <Route path="*">
+                  <PageDoesNotExist />
+                </Route>
+              </Switch>
+            )}
           </PageTransition>
         </Router>
       </AuthProvider>

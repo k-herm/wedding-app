@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import React from 'react'
+import { useLocation, RouteProps } from 'react-router-dom'
 import styled from 'styled-components'
-import { TimelineLite } from 'gsap'
+import { SwitchTransition, Transition } from 'react-transition-group'
+import { gsap } from 'gsap'
 
 import { colors } from '../theme'
 
 type PageTransitionProps = {
-  children: React.ReactNode
+  children(props: RouteProps): JSX.Element
 }
 
 const TransitionWrapper = styled.div`
@@ -14,27 +15,48 @@ const TransitionWrapper = styled.div`
     display: none;
     position: absolute;
     z-index: 2;
-    width: 100%;
+    width: 120%;
     height: 100%;
     background-color: ${colors.green};
     transform: skewX(-5deg) translateX(-50px);
   }
 `
+
 const PageTransition = ({ children }: PageTransitionProps): JSX.Element => {
   const location = useLocation()
 
-  useEffect(() => {
-    const t1 = new TimelineLite()
-    t1.set('#slider', { display: 'block' })
-    t1.fromTo('#slider', { width: '0%' }, { width: '100%', duration: 1 })
-    t1.to('#slider', { width: '0%', display: 'none', duration: 1 })
-  }, [location])
-  console.log('test')
+  const onEnter = () => {
+    gsap.fromTo(
+      '#slider',
+      { x: '-10%', display: 'block' },
+      { x: '100%', display: 'none', duration: 0.75 }
+    )
+  }
+
+  const onExit = () => {
+    gsap.fromTo(
+      '#slider',
+      { display: 'block', x: '-100%' },
+      { x: '-10%', duration: 0.75 }
+    )
+  }
+
   return (
-    <TransitionWrapper>
-      <div id="slider" />
-      {children}
-    </TransitionWrapper>
+    <SwitchTransition mode="out-in">
+      <Transition
+        key={location.pathname}
+        onEnter={onEnter}
+        onExit={onExit}
+        addEndListener={(node, done) =>
+          node.addEventListener('transitionend', done, false)
+        }
+      >
+        <TransitionWrapper>
+          <div id="slider" />
+          {children({ location })}
+        </TransitionWrapper>
+      </Transition>
+    </SwitchTransition>
   )
 }
 
