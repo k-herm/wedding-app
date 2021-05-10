@@ -32,6 +32,7 @@ export const Wrapper = styled.div`
     justify-items: center;
     padding: 2rem;
     margin: 0.5rem;
+    max-width: 650px;
   }
 
   .MuiFormHelperText-root {
@@ -54,6 +55,10 @@ export const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%;
+  }
+  .whiteLink {
+    text-decoration: none;
+    color: white;
   }
 
   #hearts {
