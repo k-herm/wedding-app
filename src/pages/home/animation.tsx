@@ -106,6 +106,11 @@ export default (pathLength: number, vw: number): TimelineLite => {
     ease: 'none',
     delay: 1.5
   })
+  t1.fromTo(
+    '#rsvpButton > button',
+    { display: 'block', opacity: 0 },
+    { opacity: 1, duration: 2, ease: 'power1.in' }
+  )
 
   t1.addLabel('end')
   return t1

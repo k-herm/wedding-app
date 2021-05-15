@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
@@ -60,8 +62,10 @@ const ThankYouCard = ({ guests, showCard }: ThankYouCardProps): JSX.Element => {
         </Typography>
       </div>
 
-      <Button variant="contained" color="primary" component="a" href="/">
-        Home
+      <Button variant="contained" color="primary">
+        <Link className="whiteLink" to="/">
+          Home
+        </Link>
       </Button>
     </Card>
   )
