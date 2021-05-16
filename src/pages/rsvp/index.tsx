@@ -16,7 +16,11 @@ export type Guest = {
   email?: string
 }
 
-const Rsvp = (): JSX.Element => {
+type RsvpProps = {
+  mount: boolean
+}
+
+const Rsvp = ({ mount }: RsvpProps): JSX.Element => {
   const [guests, setGuests] = useState<Guest[]>([])
   const [guestsNotAttending, setGuestsNotAttending] = useState<Guest[]>([])
   const [openDialog, setOpenDialog] = useState(false)
@@ -36,21 +40,25 @@ const Rsvp = (): JSX.Element => {
 
   return (
     <Wrapper>
-      <ThankYou guests={guests} showCard={showThankYou} />
-      <RsvpForm
-        guests={guests}
-        setGuests={setGuests}
-        setGuestsNotAttending={setGuestsNotAttending}
-        onSubmit={onSubmit}
-        setOpenDialog={setOpenDialog}
-        showCard={!showThankYou}
-      />
-      <ConfirmDialog
-        isOpen={openDialog}
-        setIsOpen={setOpenDialog}
-        guestsNotAttending={guestsNotAttending}
-        onSubmit={onSubmit}
-      />
+      {mount && (
+        <>
+          <ThankYou guests={guests} showCard={showThankYou} />
+          <RsvpForm
+            guests={guests}
+            setGuests={setGuests}
+            setGuestsNotAttending={setGuestsNotAttending}
+            onSubmit={onSubmit}
+            setOpenDialog={setOpenDialog}
+            showCard={!showThankYou}
+          />
+          <ConfirmDialog
+            isOpen={openDialog}
+            setIsOpen={setOpenDialog}
+            guestsNotAttending={guestsNotAttending}
+            onSubmit={onSubmit}
+          />
+        </>
+      )}
     </Wrapper>
   )
 }

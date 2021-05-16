@@ -12,7 +12,7 @@ type FilterProps = {
 }
 
 type PrivateRouteProps = {
-  children: React.ReactNode
+  children: JSX.Element | ((props: { isLoggedIn: boolean }) => JSX.Element)
   path: string
   permission?: string
 }
@@ -33,7 +33,7 @@ const PrivateRoute = ({
 }: PrivateRouteProps): JSX.Element => {
   const { user, signIn, refresh } = useAuthContext()
 
-  const [showLogin, setShowLogin] = useState(true)
+  const [showLogin, setShowLogin] = useState(false)
   useEffect(() => {
     const getUser = async () => {
       if (user?.user_id) {
@@ -73,7 +73,11 @@ const PrivateRoute = ({
       render={() => (
         <>
           <Login signIn={signIn} showLogin={showLogin} />
-          <Filter filter={showLogin ? 'true' : undefined}>{children}</Filter>
+          <Filter filter={showLogin ? 'true' : undefined}>
+            {typeof children === 'function'
+              ? children({ isLoggedIn: !showLogin })
+              : children}
+          </Filter>
         </>
       )}
     />

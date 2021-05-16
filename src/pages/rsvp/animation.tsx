@@ -4,24 +4,29 @@ import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 gsap.registerPlugin(MotionPathPlugin)
 
 export const cardIn = (): void => {
-  gsap.set('.cardIn', {
-    x: 0,
-    y: -200,
-    scale: 0.2,
-    position: 'absolute'
-  })
-  gsap.to('.cardIn', {
-    duration: 1.3,
-    scale: 1,
-    motionPath: {
-      path: 'm 0 0 q -252 142 0 300',
-      offsetY: -300
+  gsap.fromTo(
+    '.cardIn',
+    {
+      display: 'grid',
+      x: 0,
+      y: -200,
+      scale: 0,
+      position: 'absolute'
     },
-    onComplete: () =>
-      gsap.set('.cardIn', {
-        position: 'static'
-      })
-  })
+    {
+      scale: 1,
+      delay: 0.5,
+      duration: 1.3,
+      motionPath: {
+        path: 'm 0 0 q -252 142 0 300',
+        offsetY: -300
+      },
+      onComplete: () =>
+        gsap.set('.cardIn', {
+          position: 'static'
+        })
+    }
+  )
 }
 
 export const cardOut = (): void => {

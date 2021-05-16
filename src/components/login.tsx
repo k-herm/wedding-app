@@ -20,6 +20,8 @@ const LoginWrapper = styled.div`
 
   .login_card {
     padding: 1.5rem;
+    max-width: 600px;
+    margin: 0.5rem;
     min-width: 290px;
     min-height: 150px;
   }
@@ -42,15 +44,23 @@ const Login = ({ signIn, showLogin }: LoginProps): JSX.Element => {
   const [password, setPassword] = useState('')
   const [hasError, setHasError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [removeLogin, setRemoveLogin] = useState(false)
+  const [removeLogin, setRemoveLogin] = useState(!showLogin)
 
   useEffect(() => {
-    if (!showLogin) {
+    if (showLogin) {
+      setRemoveLogin(false)
+    } else {
       gsap
         .to('#login_screen', { opacity: 0, duration: 0.5 })
         .then(() => setRemoveLogin(true))
     }
   }, [showLogin])
+
+  useEffect(() => {
+    if (!removeLogin) {
+      gsap.from('#login_screen', { opacity: 0, duration: 1 })
+    }
+  }, [removeLogin])
 
   const handleClick = async (): Promise<void> => {
     if (signIn && password) {
@@ -70,7 +80,7 @@ const Login = ({ signIn, showLogin }: LoginProps): JSX.Element => {
     <LoginWrapper id="login_screen">
       <Card className="login_card" raised>
         <Typography gutterBottom variant="h5" component="h2">
-          Feeling lucky?
+          Hey there! Please sign in with the password from your invite 🙂
         </Typography>
         <TextField
           className="login_input"

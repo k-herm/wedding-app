@@ -59,7 +59,7 @@ export const Container = styled.div`
 
   #rsvpButton {
     position: absolute;
-    top: 15rem;
+    top: 11rem;
     width: 100%;
     display: flex;
     justify-content: center;

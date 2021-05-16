@@ -69,7 +69,7 @@ export const Wrapper = styled.div`
 
   // for animations
   .cardIn {
-    display: grid;
+    display: none;
   }
   .cardOut {
     display: none;

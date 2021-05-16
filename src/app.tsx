@@ -28,9 +28,9 @@ const App = (): JSX.Element => (
                   <Home />
                 </Route>
 
-                <Route path="/rsvp">
-                  <Rsvp />
-                </Route>
+                <PrivateRoute path="/rsvp">
+                  {({ isLoggedIn }) => <Rsvp mount={isLoggedIn} />}
+                </PrivateRoute>
 
                 <PrivateRoute path="/admin" permission="admin">
                   <Admin />
