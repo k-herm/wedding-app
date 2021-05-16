@@ -5,12 +5,13 @@ import React, {
   Dispatch,
   SetStateAction
 } from 'react'
-
+import { Link } from 'react-router-dom'
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import FormHelperText from '@material-ui/core/FormHelperText'
+import IconButton from '@material-ui/core/IconButton'
 import GuestTable from './guest-table'
 
 import { Guest } from './index'
@@ -106,6 +107,9 @@ const RsvpForm = ({
   return (
     <Card className={`rsvp_card ${showCard ? 'cardIn' : 'cardOut'}`} raised>
       <div>
+        <IconButton className="backButton" aria-label="delete">
+          <Link to="/">X</Link>
+        </IconButton>
         <Typography variant="h2" align="center" gutterBottom>
           r.s.v.p
         </Typography>
@@ -152,7 +156,7 @@ const RsvpForm = ({
 
       <GuestTable setGuests={setGuests} guests={guests} error={hasRsvpError} />
 
-      <div className="buttons">
+      <div className="actionButtons">
         <Button
           variant="outlined"
           color="primary"

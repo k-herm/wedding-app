@@ -51,13 +51,24 @@ export const Wrapper = styled.div`
     }
   }
 
-  .buttons {
+  a {
+    text-decoration: none;
+  }
+  .actionButtons {
     display: flex;
     justify-content: space-between;
     width: 100%;
   }
+  .backButton {
+    position: absolute;
+    right: 2rem;
+    top: 1.2rem;
+    border-radius: unset;
+    a {
+      color: inherit;
+    }
+  }
   .whiteLink {
-    text-decoration: none;
     color: white;
   }
 
