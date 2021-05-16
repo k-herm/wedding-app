@@ -13,7 +13,8 @@ jest.mock('jsonwebtoken')
 describe('private-route', () => {
   const user_id = 'crazy_gal'
   const token = 789
-  const loginTitle = 'Feeling lucky?'
+  const loginTitle =
+    'Hey there! Please sign in with the password from your invite 🙂'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -179,5 +180,47 @@ describe('private-route', () => {
 
     jest.runOnlyPendingTimers()
     jest.useRealTimers()
+  })
+
+  describe('render props', () => {
+    const renderRouteWithProps = () =>
+      render(
+        <AuthProvider>
+          <BrowserRouter>
+            <Switch>
+              <PrivateRoute permission={'user'}>
+                {({ isLoggedIn }) => <div>{`isLoggedIn: ${isLoggedIn}`}</div>}
+              </PrivateRoute>
+            </Switch>
+          </BrowserRouter>
+        </AuthProvider>
+      )
+
+    it('should pass isLoggedIn false prop to children if not logged in', async () => {
+      fetch.mockResolvedValueOnce({
+        json: jest.fn(() => ({ error: 'Not logged in.' }))
+      })
+      jwt.decode = jest.fn()
+
+      const { getByText } = renderRouteWithProps()
+
+      await waitFor(() => expect(getByText('isLoggedIn: false')).toBeTruthy())
+    })
+
+    it('should pass isLoggedIn true prop to children if logged in', async () => {
+      fetch.mockResolvedValueOnce({
+        json: jest.fn(() => ({ data: { token } }))
+      })
+
+      jwt.decode.mockReturnValueOnce({
+        user_id,
+        permission: 'user',
+        token
+      })
+
+      const { getByText } = renderRouteWithProps()
+
+      await waitFor(() => expect(getByText('isLoggedIn: true')).toBeTruthy())
+    })
   })
 })

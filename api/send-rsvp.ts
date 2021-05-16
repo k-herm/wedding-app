@@ -5,7 +5,7 @@ import withAuth from './utils/with-auth'
 import fetchQuery from './utils/hasura'
 import { ValidationError } from './utils/validation-error'
 
-const mutation = (guest: Guest) => `
+export const mutation = (guest: Guest) => `
   mutation updateGuests {
     update_Guests(
       where: {
@@ -36,37 +36,37 @@ export default async (
   req: VercelRequest,
   res: VercelResponse
 ): Promise<void> => {
-  // withAuth(req, res, 'user', async () => {
-  try {
-    const ajv = new Ajv({ allErrors: true })
-    const validateBody = ajv.compile(bodySchema)
+  withAuth(req, res, 'user', async () => {
+    try {
+      const ajv = new Ajv({ allErrors: true })
+      const validateBody = ajv.compile(bodySchema)
 
-    if (!validateBody(req.body)) {
-      throw new ValidationError(validateBody.errors)
+      if (!validateBody(req.body)) {
+        throw new ValidationError(validateBody.errors)
+      }
+
+      const rsvps = (req.body as { data: [] }).data
+      const updatedGuests = []
+      await Promise.all(
+        rsvps.map(async rsvp => {
+          const { update_Guests } = await fetchQuery({ query: mutation(rsvp) })
+          updatedGuests.push(update_Guests.returning)
+        })
+      )
+
+      res.status(200).send({ data: updatedGuests.flat() })
+    } catch (error) {
+      let errorMessage = 'Something went wrong during update'
+      let code = 500
+      if (error.name === 'ValidationError') {
+        errorMessage = error.errors
+        code = 400
+      }
+
+      res.status(code).send({ error: errorMessage })
+      console.error(error)
     }
-
-    const rsvps = (req.body as { data: [] }).data
-    const updatedGuests = []
-    await Promise.all(
-      rsvps.map(async rsvp => {
-        const { update_Guests } = await fetchQuery({ query: mutation(rsvp) })
-        updatedGuests.push(update_Guests.returning)
-      })
-    )
-
-    res.status(200).send({ data: updatedGuests.flat() })
-  } catch (error) {
-    let errorMessage = 'Something went wrong during update'
-    let code = 500
-    if (error.name === 'ValidationError') {
-      errorMessage = error.errors
-      code = 400
-    }
-
-    res.status(code).send({ error: errorMessage })
-    console.error(error)
-  }
-  // })
+  })
 }
 
 export type Guest = {

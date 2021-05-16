@@ -21,7 +21,7 @@ const TransitionWrapper = styled.div`
     transform: skewX(-5deg) translateX(-50px);
   }
 `
-
+// TO DO check back/forward button is working with page transitions
 const PageTransition = ({ children }: PageTransitionProps): JSX.Element => {
   const location = useLocation()
 

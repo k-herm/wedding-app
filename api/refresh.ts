@@ -119,6 +119,6 @@ async function getUserRefresh(token: string): Promise<Token> {
     return null
   } catch (error) {
     console.error(error)
-    return null
+    throw new Error(error)
   }
 }
