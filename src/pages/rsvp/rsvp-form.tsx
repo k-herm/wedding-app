@@ -107,7 +107,7 @@ const RsvpForm = ({
   return (
     <Card className={`rsvp_card ${showCard ? 'cardIn' : 'cardOut'}`} raised>
       <div>
-        <IconButton className="backButton" aria-label="delete">
+        <IconButton className="backButton" aria-label="close rsvp">
           <Link to="/">X</Link>
         </IconButton>
         <Typography variant="h2" align="center" gutterBottom>

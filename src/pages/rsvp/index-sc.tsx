@@ -90,6 +90,10 @@ export const Wrapper = styled.div`
     .rsvp_card {
       padding: 0.8rem;
     }
+    .backButton {
+      right: 0.1rem;
+      top: 0.1rem;
+    }
     h3 {
       font-size: 2.75rem;
     }
