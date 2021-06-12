@@ -22,6 +22,10 @@ const PageWrapper = styled.div`
 
     span {
       padding: 0 5px;
+      img {
+        margin-left: 1rem;
+        vertical-align: middle;
+      }
     }
   }
 

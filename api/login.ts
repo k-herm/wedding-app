@@ -1,4 +1,4 @@
-import { NowRequest, NowResponse } from '@vercel/node'
+import { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomBytes } from 'crypto'
 import fetchQuery from './utils/hasura'
 import { Token, COOKIE_EXPIRY } from './utils/with-auth'
@@ -7,7 +7,10 @@ import { setCookieAndJwt } from './refresh'
 export const ADMIN_COOKIE_EXPIRY = 1000 * 60 * 60 * 24
 const ADMIN_URL = '/admin'
 
-export default async (req: NowRequest, res: NowResponse): Promise<void> => {
+export default async (
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> => {
   try {
     if (req.headers.cookie && req.headers.authorization) {
       res.status(200).send({ message: 'You are logged in.' })

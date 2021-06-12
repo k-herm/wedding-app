@@ -1,4 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
+
 import { Container, ClimbPathContainer } from './index-sc'
 import { mediaBreaks } from '../../theme'
 import { ReactComponent as ClimbPath } from './climbPath.svg'
@@ -81,6 +84,12 @@ const Home = (): JSX.Element => {
       </svg>
 
       <h1></h1>
+
+      <div id="rsvpButton">
+        <Button variant="contained" color="primary">
+          <Link to="/rsvp">r.s.v.p 👉</Link>
+        </Button>
+      </div>
 
       <ClimbPathContainer pathLength={climbPathLength}>
         <ClimbPath id="climbPathSVG" />

@@ -54,6 +54,32 @@ export const Container = styled.div`
     position: absolute;
     bottom: 1rem;
     right: 1rem;
+    cursor: pointer;
+  }
+
+  #rsvpButton {
+    position: absolute;
+    top: 11rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+
+    button {
+      display: none;
+      border-radius: 30px;
+      text-transform: none;
+
+      a {
+        padding-left: 1.5rem;
+        padding-right: 1.1rem;
+        font-weight: 600;
+        font-size: 2rem;
+        letter-spacing: 2px;
+        text-decoration: none;
+        color: white;
+      }
+    }
   }
 
   @media (max-width: ${mediaBreaks.phone}px) {
@@ -64,6 +90,17 @@ export const Container = styled.div`
     }
     #reloadIcon {
       width: 50px;
+    }
+    #rsvpButton {
+      top: 14rem;
+      a {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  @media (min-width: 2100px) {
+    #reloadIcon {
+      right: 20rem;
     }
   }
 `

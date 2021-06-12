@@ -5,9 +5,6 @@ import fetchQuery from '../utils/hasura'
 jest.mock('../utils/hasura.ts')
 jest.mock('../utils/with-auth.ts')
 
-const permission = 'user'
-const req = {}
-
 describe('import', () => {
   let res
   beforeEach(() => {

@@ -21,6 +21,10 @@ describe('refresh', () => {
       new Date(cookieExpiry).toString().replace(/[\s()]/g, m => match[m]) +
       ';'
   )
+  const headers = {
+    authorization: 'Bearer someJwt',
+    cookie: `refreshToken=["abc", ${cookieExpiry}]`
+  }
 
   let res
   beforeEach(() => {
@@ -46,8 +50,7 @@ describe('refresh', () => {
   })
 
   it('should send a 401 if header does not contain a cookie', async () => {
-    const headers = {}
-    await refresh({ headers }, res)
+    await refresh({ headers: {} }, res)
 
     expect(res.status).toBeCalledWith(401)
     expect(res.send).toBeCalledWith({ error: 'Please login.' })
@@ -78,11 +81,6 @@ describe('refresh', () => {
   })
 
   it('should send a 401 redirect if jwt is invalid', async () => {
-    const headers = {
-      authorization: 'Bearer someJwt',
-      cookie: `refreshToken=["abc", ${cookieExpiry}]`
-    }
-
     jwt.verify.mockImplementation(() => Promise.reject())
     fetchQuery
       .mockResolvedValueOnce({
@@ -99,10 +97,30 @@ describe('refresh', () => {
   })
 
   it('should send refresh jwt if valid', async () => {
-    const headers = {
-      authorization: 'Bearer someJqwt',
-      cookie: `refreshToken=["abc", ${cookieExpiry}]`
-    }
+    fetchQuery
+      .mockResolvedValueOnce({
+        Users: [{ user_id, token }]
+      })
+      .mockResolvedValueOnce({
+        update_Users: { returning: [{ token: newToken }] }
+      })
+
+    jwt.verify.mockImplementation(() => ({ user_id, permission: 'user' }))
+    jwt.sign.mockImplementation(() => fakeJwt)
+
+    await refresh({ headers }, res)
+
+    expect(fetchQuery).toHaveBeenCalledTimes(2)
+    expect(res.setHeader).toHaveBeenCalledWith(
+      'Set-Cookie',
+      expect.stringMatching(cookieRegex)
+    )
+    expect(res.status).toBeCalledWith(200)
+    expect(res.send).toBeCalledWith({ data: { token: fakeJwt } })
+  })
+
+  it('should send different jwt and cookie issuer if in prod env', async () => {
+    process.env.NODE_ENV = 'production'
 
     fetchQuery
       .mockResolvedValueOnce({
@@ -129,25 +147,18 @@ describe('refresh', () => {
   it('return an error message if there is an error with fetchQuery', async () => {
     const headers = { cookie: 'refreshToken=[]' }
 
-    fetchQuery.mockRejectedValueOnce({ name: 'request failed' })
+    fetchQuery.mockRejectedValueOnce({ error: 'request failed' })
 
     await refresh({ headers }, res)
 
-    expect(res.status).toBeCalledWith(401)
+    expect(res.status).toBeCalledWith(500)
     expect(res.send).toBeCalledWith({
-      error: 'Please try again.'
+      error: 'Something went wrong refreshing token'
     })
   })
 
   it('should send 401 if the user is not found', async () => {
-    const headers = {
-      authorization: 'Bearer someJwt',
-      cookie: `refreshToken=["abc", ${cookieExpiry}]`
-    }
-
-    fetchQuery.mockResolvedValueOnce({
-      Users: []
-    })
+    fetchQuery.mockResolvedValueOnce({ Users: [] })
 
     await refresh({ headers }, res)
 

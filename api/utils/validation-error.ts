@@ -7,6 +7,7 @@ export class ValidationError extends Error {
     this.name = 'ValidationError'
     this.errors = errors.map((error: VError) => ({
       type: error.keyword,
+      prop: error.dataPath?.replace(/\/data\/[\d+]\//, ''),
       message: error.message
     }))
   }
@@ -15,5 +16,6 @@ export class ValidationError extends Error {
 // based on return of ajv validation
 type VError = {
   keyword: string
+  dataPath?: string
   message?: string
 }

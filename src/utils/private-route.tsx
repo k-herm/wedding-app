@@ -12,7 +12,7 @@ type FilterProps = {
 }
 
 type PrivateRouteProps = {
-  children: React.ReactNode
+  children: JSX.Element | ((props: { isLoggedIn: boolean }) => JSX.Element)
   path: string
   permission?: string
 }
@@ -72,8 +72,12 @@ const PrivateRoute = ({
       {...rest}
       render={() => (
         <>
-          {showLogin && <Login signIn={signIn} />}
-          <Filter filter={showLogin ? 'true' : undefined}>{children}</Filter>
+          <Login signIn={signIn} showLogin={showLogin} />
+          <Filter filter={showLogin ? 'true' : undefined}>
+            {typeof children === 'function'
+              ? children({ isLoggedIn: !showLogin })
+              : children}
+          </Filter>
         </>
       )}
     />
